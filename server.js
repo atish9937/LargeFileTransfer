@@ -30,12 +30,12 @@ const io = new Server(server, {
             ? ["https://largefiletransfer.org", "https://www.largefiletransfer.org"]
             : ["http://localhost:3000", "http://127.0.0.1:3000"],
         credentials: true,
-        methods: ["GET", "POST"]
+        methods: ["GET", "POST"],
+        transports: ['websocket', 'polling']
     },
     serveClient: true,
     path: '/socket.io/',
     allowEIO3: true,
-    transports: ['websocket', 'polling'],
     // Add these for better transport handling
     pingTimeout: 60000,
     pingInterval: 25000,
