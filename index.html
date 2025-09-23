@@ -644,7 +644,21 @@
 
             socket = io(SIGNALING_SERVER_URL, {
                 // Only connect when explicitly needed
-                autoConnect: false
+                autoConnect: false,
+                // Temporarily use polling-only to avoid WebSocket issues
+                transports: ['polling'],
+                // Disable upgrade for now
+                upgrade: false,
+                // Connection settings for production
+                timeout: 10000,
+                reconnection: true,
+                reconnectionAttempts: 5,
+                reconnectionDelay: 2000,
+                // Production-specific settings
+                forceNew: false,
+                // Ping settings to match server
+                pingTimeout: 60000,
+                pingInterval: 25000
             });
 
             // Set up event handlers
