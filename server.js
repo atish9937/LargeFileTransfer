@@ -29,16 +29,34 @@ const io = new Server(server, {
         origin: process.env.NODE_ENV === 'production'
             ? ["https://largefiletransfer.org", "https://www.largefiletransfer.org"]
             : ["http://localhost:3000", "http://127.0.0.1:3000"],
-        credentials: true
+        credentials: true,
+        methods: ["GET", "POST"]
     },
     serveClient: true,
     path: '/socket.io/',
-    // Add these for better compatibility
     allowEIO3: true,
-    transports: ['websocket', 'polling']
+    transports: ['websocket', 'polling'],
+    // Add these for better transport handling
+    pingTimeout: 60000,
+    pingInterval: 25000,
+    upgradeTimeout: 10000,
+    maxHttpBufferSize: 1e6
 });
 
 const PORT = process.env.PORT || 3000;
+
+// Add CORS middleware specifically for Socket.io endpoints
+app.use('/socket.io/*', (req, res, next) => {
+    res.header('Access-Control-Allow-Origin', 'https://largefiletransfer.org');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+    res.header('Access-Control-Allow-Credentials', 'true');
+
+    if (req.method === 'OPTIONS') {
+        return res.status(200).end();
+    }
+    next();
+});
 
 // Set a Content Security Policy
 app.use((req, res, next) => {
