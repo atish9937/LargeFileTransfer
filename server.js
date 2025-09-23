@@ -35,7 +35,7 @@ const io = new Server(server, {
     },
     serveClient: true,
     path: '/socket.io/',
-    allowEIO3: true,
+    allowEIO4: true,
     // Add these for better transport handling
     pingTimeout: 60000,
     pingInterval: 25000,
