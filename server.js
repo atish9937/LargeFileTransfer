@@ -102,9 +102,9 @@ app.get('/send(|/)', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-// Handle receiver route with main index.html (since you're using single page app)
+// Handle receiver route with dedicated receive page
 app.get('/receive/:roomId', (req, res) => {
-    res.sendFile(path.join(__dirname, 'index.html'));
+    res.sendFile(path.join(__dirname, 'receive.html'));
 });
 
 // Secure TURN server configuration endpoint
