@@ -24,16 +24,19 @@ setInterval(() => {
     }
 }, RATE_LIMIT_WINDOW);
 
+  // In server.js
 const io = new Server(server, {
-    cors: { // Restrict origins for production
+    cors: {
         origin: process.env.NODE_ENV === 'production'
-            ? ["https://largefiletransfer.org"] // TODO: Replace with your actual domain
+            ? ["https://largefiletransfer.org", "https://www.largefiletransfer.org"]
             : ["http://localhost:3000", "http://127.0.0.1:3000"],
+        credentials: true
     },
-    // Ensure Socket.io client is served
     serveClient: true,
-    // Add path configuration for production
-    path: '/socket.io/'
+    path: '/socket.io/',
+    // Add these for better compatibility
+    allowEIO3: true,
+    transports: ['websocket', 'polling']
 });
 
 const PORT = process.env.PORT || 3000;
