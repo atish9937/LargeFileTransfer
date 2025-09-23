@@ -382,7 +382,7 @@
             });
         }
 
-        const socket = io(SIGNALING_SERVER_URL);
+        let socket = null; // Initialize socket only when needed
         let pc; // PeerConnection
         let dataChannel;
         let fileToSend;
@@ -411,32 +411,17 @@
 
 
 
-        // --- Signaling Logic ---
-        socket.on('connect', () => {
-            debugLog('Connected to signaling server');
-        });
-
-        socket.on('disconnect', () => {
-            debugLog('Disconnected from signaling server');
-            showError('Lost connection to signaling server', true);
-        });
-
-        socket.on('connect_error', (error) => {
-            debugLog('Signaling server connection error:', error);
-            showError('Could not connect to signaling server');
-        });
-
-        socket.on('user-joined', createOffer);
-        socket.on('offer', (data) => handleOffer(data, pc, socket, roomId));
-        socket.on('answer', (data) => handleAnswer(data, pc));
-        socket.on('ice-candidate', (data) => handleIceCandidate(data, pc));
-        socket.on('file-meta', handleFileMeta);
-        // socket.on('transfer-done', handleTransferDone); // Removed: Receiver will now trigger finalization
-        socket.on('transfer-confirmed', handleTransferConfirmed);
+        // --- Signaling Logic --- (Moved to initializeSocket function)
 
         // --- UI Logic ---
         const path = window.location.pathname;
         const pathParts = path.split('/');
+
+        // Only initialize file transfer functionality on relevant pages
+        const isFileTransferPage = path.startsWith('/send') || path.startsWith('/receive/') || path === '/';
+
+        if (isFileTransferPage) {
+            // Initialize file transfer functionality
 
 
         // Check if we are on a receiver URL, e.g., /receive/xyz123
@@ -457,7 +442,8 @@
                 downloadBtn.textContent = 'Accept & Save';
             }
 
-            // Initialize peer connection and join room with proper sequencing
+            // Initialize socket connection and join room
+            initializeSocket();
             socket.emit('join-room', roomId);
             // Set up peer connection after joining room to prevent race conditions
             setTimeout(() => {
@@ -565,6 +551,8 @@
             // Load TURN configuration before setting up peer connection
             await loadTurnConfig();
 
+            // Initialize socket connection for sender
+            initializeSocket();
             socket.emit('join-room', roomId);
             setupPeerConnection(true);
 
@@ -648,6 +636,43 @@
 
             // Clear ICE candidate queue
             clearIceCandidateQueue();
+        }
+
+        // Initialize Socket.io connection only when needed
+        function initializeSocket() {
+            if (socket) return socket; // Already initialized
+
+            socket = io(SIGNALING_SERVER_URL, {
+                // Only connect when explicitly needed
+                autoConnect: false
+            });
+
+            // Set up event handlers
+            socket.on('connect', () => {
+                debugLog('Connected to signaling server');
+            });
+
+            socket.on('disconnect', () => {
+                debugLog('Disconnected from signaling server');
+                showError('Lost connection to signaling server', true);
+            });
+
+            socket.on('connect_error', (error) => {
+                debugLog('Signaling server connection error:', error);
+                showError('Could not connect to signaling server');
+            });
+
+            socket.on('user-joined', createOffer);
+            socket.on('offer', (data) => handleOffer(data, pc, socket, roomId));
+            socket.on('answer', (data) => handleAnswer(data, pc));
+            socket.on('ice-candidate', (data) => handleIceCandidate(data, pc));
+            socket.on('file-meta', handleFileMeta);
+            socket.on('transfer-confirmed', handleTransferConfirmed);
+
+            // Connect now
+            socket.connect();
+
+            return socket;
         }
 
         // Cleanup on page unload
@@ -1168,6 +1193,7 @@
             }
         }
 
+        } // End of isFileTransferPage check
 
     </script>
     </div>
