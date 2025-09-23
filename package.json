@@ -1,0 +1,14 @@
+{
+  "name": "directdrop-signaling",
+  "version": "1.0.0",
+  "description": "Signaling server for DirectDrop WebRTC file transfer.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "dotenv": "^17.2.2",
+    "express": "^4.19.2",
+    "socket.io": "^4.7.5"
+  }
+}

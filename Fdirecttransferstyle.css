@@ -1,0 +1,449 @@
+
+
+/* Features Grid */
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    margin: 3rem 0;
+    text-align: left;
+}
+
+.feature-item {
+    background: rgba(102, 126, 234, 0.05);
+    padding: 2rem;
+    border-radius: 16px;
+    border: 1px solid rgba(102, 126, 234, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.feature-item:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 32px rgba(102, 126, 234, 0.15);
+}
+
+.feature-item h3 {
+    color: #4a5568;
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+
+.feature-item p {
+    color: #6b7280;
+    line-height: 1.6;
+    margin: 0;
+}
+
+@media (max-width: 768px) {
+    .features-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+        margin: 2rem 0;
+    }
+    
+    .feature-item {
+        padding: 1.5rem;
+        text-align: center;
+    }
+}
+
+
+/* Info Section Styles */
+.info-section {
+    max-width: 900px;
+    margin: 4rem auto 2rem;
+    padding: 3rem 2rem;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border-radius: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+    text-align: left;
+}
+
+.info-section h2 {
+    color: #4a5568;
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.info-section h3 {
+    color: #4a5568;
+    font-size: 1.5rem;
+    margin: 2.5rem 0 1rem 0;
+    font-weight: 600;
+}
+
+.benefits-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    margin: 2rem 0;
+}
+
+.benefit-item {
+    background: rgba(102, 126, 234, 0.05);
+    padding: 2rem;
+    border-radius: 16px;
+    border: 1px solid rgba(102, 126, 234, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    text-align: center;
+}
+
+.benefit-item:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 32px rgba(102, 126, 234, 0.15);
+}
+
+.benefit-item h3 {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+    color: #4a5568;
+}
+
+.benefit-item p {
+    color: #6b7280;
+    line-height: 1.6;
+    margin: 0;
+}
+
+.use-cases {
+    background: rgba(72, 187, 120, 0.05);
+    padding: 2rem;
+    border-radius: 16px;
+    border: 1px solid rgba(72, 187, 120, 0.1);
+    margin: 1.5rem 0;
+}
+
+.use-cases li {
+    margin: 1rem 0;
+    line-height: 1.6;
+    color: #4a5568;
+}
+
+.use-cases strong {
+    color: #2f855a;
+}
+
+.cta-section {
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+    padding: 2.5rem;
+    border-radius: 16px;
+    text-align: center;
+    margin-top: 3rem;
+    border: 1px solid rgba(102, 126, 234, 0.2);
+}
+
+.cta-section h3 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+}
+
+@media (max-width: 768px) {
+    .info-section {
+        margin: 2rem auto;
+        padding: 2rem 1.5rem;
+    }
+    
+    .benefits-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+    
+    .benefit-item {
+        padding: 1.5rem;
+    }
+    
+    .info-section h2 {
+        font-size: 1.75rem;
+    }
+    
+    .info-section h3 {
+        font-size: 1.25rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .info-section {
+        padding: 1.5rem 1rem;
+    }
+    
+    .cta-section {
+        padding: 2rem 1.5rem;
+    }
+}
+
+
+/* How to Transfer Large Files Section Styles */
+.how-to-section {
+    max-width: 1000px;
+    margin: 4rem auto;
+    padding: 3rem 2.5rem;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border-radius: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+    text-align: left;
+}
+
+.how-to-section h2 {
+    color: #4a5568;
+    font-size: 2.2rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-weight: 700;
+}
+
+.how-to-intro {
+    font-size: 1.2rem;
+    color: #4a5568;
+    text-align: center;
+    margin-bottom: 3rem;
+    line-height: 1.6;
+}
+
+.steps-container {
+    margin: 3rem 0;
+}
+
+.step-item {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 3rem;
+    padding: 2rem;
+    background: rgba(102, 126, 234, 0.03);
+    border-radius: 16px;
+    border: 1px solid rgba(102, 126, 234, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.step-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(102, 126, 234, 0.1);
+}
+
+.step-number {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-right: 2rem;
+    flex-shrink: 0;
+    box-shadow: 0 4px 16px rgba(102, 126, 234, 0.3);
+}
+
+.step-content {
+    flex: 1;
+}
+
+.step-content h3 {
+    color: #4a5568;
+    font-size: 1.4rem;
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+
+.step-content p {
+    color: #6b7280;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+    font-size: 1.1rem;
+}
+
+.step-tips {
+    background: rgba(72, 187, 120, 0.05);
+    padding: 1.5rem;
+    border-radius: 12px;
+    border: 1px solid rgba(72, 187, 120, 0.1);
+    margin-top: 1rem;
+}
+
+.step-tips strong {
+    color: #2f855a;
+    font-weight: 600;
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.step-tips ul {
+    margin: 0.5rem 0;
+    padding-left: 1.5rem;
+}
+
+.step-tips li {
+    color: #4a5568;
+    margin: 0.3rem 0;
+    line-height: 1.5;
+}
+
+.how-to-features {
+    margin: 4rem 0;
+    padding: 2.5rem;
+    background: rgba(102, 126, 234, 0.05);
+    border-radius: 16px;
+    border: 1px solid rgba(102, 126, 234, 0.1);
+}
+
+.how-to-features h3 {
+    color: #4a5568;
+    font-size: 1.6rem;
+    margin-bottom: 2rem;
+    text-align: center;
+    font-weight: 600;
+}
+
+.features-comparison {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+}
+
+.feature-column {
+    background: rgba(255, 255, 255, 0.8);
+    padding: 2rem;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.feature-column h4 {
+    font-size: 1.2rem;
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+}
+
+.feature-column:first-child h4 {
+    color: #2f855a;
+}
+
+.feature-column:last-child h4 {
+    color: #c53030;
+}
+
+.feature-column ul {
+    margin: 0;
+    padding-left: 1.5rem;
+}
+
+.feature-column li {
+    margin: 0.8rem 0;
+    line-height: 1.5;
+    color: #4a5568;
+}
+
+.how-to-cta {
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+    padding: 3rem;
+    border-radius: 16px;
+    text-align: center;
+    margin-top: 3rem;
+    border: 1px solid rgba(102, 126, 234, 0.2);
+}
+
+.how-to-cta h3 {
+    color: #4a5568;
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+
+.how-to-cta p {
+    color: #6b7280;
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+    line-height: 1.6;
+}
+
+.how-to-btn {
+    padding: 16px 32px;
+    font-size: 1.1rem;
+    min-width: 250px;
+    margin-top: 1rem;
+}
+
+/* Mobile Responsive Styles for How-To Section */
+@media (max-width: 768px) {
+    .how-to-section {
+        margin: 2rem auto;
+        padding: 2rem 1.5rem;
+    }
+    
+    .how-to-section h2 {
+        font-size: 1.8rem;
+    }
+    
+    .how-to-intro {
+        font-size: 1.1rem;
+    }
+    
+    .step-item {
+        flex-direction: column;
+        text-align: center;
+        margin-bottom: 2rem;
+        padding: 1.5rem;
+    }
+    
+    .step-number {
+        margin-right: 0;
+        margin-bottom: 1.5rem;
+        width: 50px;
+        height: 50px;
+        font-size: 1.2rem;
+    }
+    
+    .features-comparison {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+    
+    .how-to-cta {
+        padding: 2rem 1.5rem;
+    }
+    
+    .how-to-cta h3 {
+        font-size: 1.5rem;
+    }
+    
+    .how-to-btn {
+        width: 100%;
+        max-width: 280px;
+    }
+}
+
+@media (max-width: 480px) {
+    .how-to-section {
+        padding: 1.5rem 1rem;
+    }
+    
+    .step-item {
+        padding: 1rem;
+    }
+    
+    .step-content h3 {
+        font-size: 1.2rem;
+    }
+    
+    .step-content p {
+        font-size: 1rem;
+    }
+    
+    .feature-column {
+        padding: 1.5rem;
+    }
+}

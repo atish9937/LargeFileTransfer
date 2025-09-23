@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <title>Privacy Policy - LargeFileTransfer Secure File Transfer</title>
+    <meta name="description" content="LargeFileTransfer's privacy policy explains our commitment to secure file transfer. We never store your files - peer-to-peer technology ensures complete data privacy.">
+    <meta name="keywords" content="privacy policy, secure file transfer privacy, data protection, file sharing privacy, peer to peer privacy, end to end encryption privacy">
+    <link rel="canonical" href="https://largefiletransfer.org/privacy">
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://largefiletransfer.org/privacy">
+    <meta property="og:title" content="Privacy Policy - LargeFileTransfer.org">
+    <meta property="og:description" content="LargeFileTransfer.org's privacy policy explains our commitment to secure file transfer with complete data privacy.">
+    <meta property="og:image" content="https://largefiletransfer.org/social-preview-image.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://largefiletransfer.org/privacy">
+    <meta property="twitter:title" content="Privacy Policy - LargeFileTransfer.org">
+    <meta property="twitter:description" content="LargeFileTransfer.org's privacy policy for secure large file transfer.">
+    <meta property="twitter:image" content="https://largefiletransfer.org/social-preview-image.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-brand">LargeFileTransfer.org</div>
+        <ul class="navbar-nav">
+            <li><a href="/">Home</a></li>
+            <li><a href="/send">Send File</a></li>
+        </ul>
+    </nav>
+
+    <div class="main-content-wrapper">
+        <div class="content">
+        <h1>Privacy Policy - Secure File Transfer</h1>
+        <p><strong>Last Updated: September 21, 2025</strong></p>
+        <p>LargeFileTransfer.org is committed to providing the most secure large file transfer experience possible. This Privacy Policy explains our privacy-first approach to large file sharing and how we protect your data during peer-to-peer file transfers.</p>
+
+        <h2>1. Information We Do Not Collect</h2>
+        <p>LargeFileTransfer is designed for direct peer-to-peer file transfer. This means:</p>
+        <ul>
+            <li>We do not store your files on our servers. Files are transferred directly between the sender and receiver.</li>
+            <li>We do not collect personal information such as your name, email address, or IP address.</li>
+            <li>We do not track your file transfers or their content.</li>
+        </ul>
+
+        <h2>2. Signaling Server</h2>
+        <p>Our signaling server (<code>http://localhost:3000</code> in development, your production URL otherwise) is used solely to facilitate the initial connection between peers. It helps devices find each other and exchange necessary WebRTC signaling messages (offers, answers, ICE candidates). Once a direct peer-to-peer connection is established, the signaling server is no longer involved in the file transfer itself.</p>
+        <p>The signaling server does not log or store any file content or user-identifiable information beyond temporary session IDs required for connection setup.</p>
+
+        <h2>3. WebRTC Technology</h2>
+        <p>LargeFileTransfer utilizes WebRTC (Web Real-Time Communication) technology, which enables direct communication between web browsers. This technology is designed with privacy in mind, allowing data to flow directly between peers without intermediary servers once the connection is established.</p>
+
+        <h2>4. Browser Permissions</h2>
+        <p>When using LargeFileTransfer, your browser may ask for permissions (e.g., to access your file system for saving files). These permissions are handled by your browser and operating system, and LargeFileTransfer does not gain persistent access to your system beyond the scope of the current transfer as granted by you.</p>
+
+        <h2>5. Changes to This Privacy Policy</h2>
+        <p>We may update our Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page. You are advised to review this Privacy Policy periodically for any changes.</p>
+
+        <h2>6. Contact Us</h2>
+        <p>If you have any questions about this Privacy Policy, please contact us at support@privatelyshare.com.</p>
+        </div>
+    </div>
+
+    <footer class="footer-main">
+        <p>&copy; 2025 LargeFileTransfer.org. All rights reserved.</p>
+        <p>
+            <a href="/privacy">Privacy Policy</a> |
+            <a href="/terms">Terms of Service</a>
+        </p>
+    </footer>
+</body>
+</html>

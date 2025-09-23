@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="theme-color" content="#667eea">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <title>Receive File | Large File Transfer</title>
+    <meta name="description" content="Secure file receiving page - Download your shared file with end-to-end encryption.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-brand" role="banner">LargeFileTransfer.org</div>
+        <ul class="navbar-nav">
+            <li><a href="/">Home</a></li>
+            <li><a href="/send">Send File</a></li>
+        </ul>
+    </nav>
+
+    <main class="main-content-wrapper" role="main">
+        <section class="container" aria-label="File receiving interface">
+            <!-- Receive Screen -->
+            <div id="receive-screen" role="region" aria-label="File receiving interface">
+                <h1>Incoming File</h1>
+                <p>You are about to receive a file.</p>
+                <div class="file-info">
+                    <p><strong>Filename:</strong> <span id="file-name">Loading...</span></p>
+                    <p><strong>Size:</strong> <span id="file-size">Loading...</span></p>
+                </div>
+                <button class="btn" id="download-btn" disabled>Accept & Download</button>
+                <button class="btn btn-cancel" id="cancel-btn" style="display: none;">Cancel</button>
+                <p id="receive-status" style="margin-top: 20px;">Connecting...</p>
+                <div class="progress-bar" id="receive-progress-bar">
+                    <div class="progress-bar-inner" id="receive-progress"></div>
+                </div>
+                <button class="btn" id="try-send-btn" style="display: none; margin-top: 20px;">Try Sending File</button>
+
+                <div class="footer">
+                    <div class="security-badge">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"></path></svg>
+                        Secure File Transfer End-to-End Encrypted
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/shared.js"></script>
+    <script>
+        // Receiver-specific timeout configuration
+        const CONNECTION_TIMEOUT = 5 * 60 * 1000; // 5 minutes
+
+        const socket = io(SIGNALING_SERVER_URL);
+        let pc; // PeerConnection
+        let dataChannel;
+        let receivingFile;
+        let receivedSize = 0;
+        let receiveBuffer = [];
+        let fileWriter = null; // For File System Access API
+        let roomId = null; // Hold the room ID for the session
+        let connectionTimeout = null;
+        let connectionState = 'disconnected'; // disconnected, connecting, connected, failed
+        let transferCancelled = false;
+        let transferCompleting = false;
+
+        // --- DOM Elements ---
+        const downloadBtn = document.getElementById('download-btn');
+        const cancelBtn = document.getElementById('cancel-btn');
+        const trySendBtn = document.getElementById('try-send-btn');
+
+
+        // --- Signaling Logic ---
+        socket.on('connect', () => {
+            debugLog('Connected to signaling server');
+        });
+
+        socket.on('disconnect', () => {
+            debugLog('Disconnected from signaling server');
+            showError('Lost connection to signaling server', true);
+        });
+
+        socket.on('connect_error', (error) => {
+            debugLog('Signaling server connection error:', error);
+            showError('Could not connect to signaling server');
+        });
+
+        socket.on('offer', (data) => handleOffer(data, pc, socket, roomId));
+        socket.on('answer', (data) => handleAnswer(data, pc));
+        socket.on('ice-candidate', (data) => handleIceCandidate(data, pc));
+        socket.on('file-meta', handleFileMeta);
+        socket.on('transfer-confirmed', handleTransferConfirmed);
+
+        // --- Extract room ID from URL ---
+        const path = window.location.pathname;
+        const pathParts = path.split('/');
+
+        if (path.startsWith('/receive/') && pathParts.length === 3) {
+            roomId = pathParts[2];
+
+            // Validate room ID format
+            if (!/^[a-z0-9]{8,15}$/i.test(roomId)) {
+                showError('Invalid room ID format');
+            } else {
+                // Initialize connection
+                initializeReceiver();
+            }
+        } else {
+            showError('Invalid receive URL');
+        }
+
+        async function initializeReceiver() {
+            showCompatibilityWarnings();
+
+            if ('showSaveFilePicker' in window) {
+                downloadBtn.textContent = 'Accept & Save';
+            }
+
+            // Load TURN configuration before setting up peer connection
+            await loadTurnConfig();
+
+            // Initialize peer connection and join room
+            debugLog('Joining room:', roomId);
+            socket.emit('join-room', roomId);
+            setTimeout(() => {
+                setupPeerConnection(false);
+            }, 100);
+
+            // Event listeners
+            cancelBtn.addEventListener('click', () => {
+                cancelTransfer();
+                window.location.href = '/';
+            });
+
+            downloadBtn.addEventListener('click', () => {
+                acceptAndSaveFile();
+                setTimeout(() => {
+                    cancelBtn.style.display = 'inline-block';
+                }, 1000);
+            });
+
+            trySendBtn.addEventListener('click', () => {
+                window.location.href = '/send';
+            });
+        }
+
+
+        // --- Cleanup Functions ---
+        function cleanup() {
+            if (connectionTimeout) {
+                clearTimeout(connectionTimeout);
+                connectionTimeout = null;
+            }
+
+            if (pc) {
+                pc.close();
+                pc = null;
+            }
+
+            if (dataChannel) {
+                dataChannel.close();
+                dataChannel = null;
+            }
+
+            if (fileWriter) {
+                fileWriter.close().catch(() => {}); // Ignore errors on cleanup
+                fileWriter = null;
+            }
+
+            receiveBuffer = [];
+            receivedSize = 0;
+            transferCancelled = false;
+            transferCompleting = false;
+        }
+
+        // Cleanup on page unload
+        window.addEventListener('beforeunload', cleanup);
+
+        // --- WebRTC Core Functions ---
+        function setupPeerConnection(isInitiator) {
+            cleanup(); // Clean up any existing connection
+            clearIceCandidateQueue(); // Clear any queued ICE candidates
+
+            pc = new RTCPeerConnection(rtcConfig);
+
+            // Set connection timeout
+            connectionTimeout = setTimeout(() => {
+                if (connectionState !== 'connected') {
+                    showError('Connection timeout. Please try again.');
+                    cleanup();
+                }
+            }, CONNECTION_TIMEOUT);
+
+            pc.oniceconnectionstatechange = () => {
+                debugLog('ICE connection state:', pc.iceConnectionState);
+
+                switch (pc.iceConnectionState) {
+                    case 'connected':
+                    case 'completed':
+                        if (connectionTimeout) {
+                            clearTimeout(connectionTimeout);
+                            connectionTimeout = null;
+                        }
+                        break;
+                    case 'disconnected':
+                        showError('Connection lost. Attempting to reconnect...', true);
+                        break;
+                    case 'failed':
+                        showError('Connection failed. Please try again.');
+                        cleanup();
+                        break;
+                    case 'closed':
+                        break;
+                }
+            };
+
+            pc.onicecandidate = event => {
+                if (event.candidate) {
+                    socket.emit('ice-candidate', { roomId, candidate: event.candidate });
+                }
+            };
+
+            pc.ondatachannel = event => {
+                dataChannel = event.channel;
+                dataChannel.onmessage = handleDataChannelMessage;
+                dataChannel.onopen = () => {
+                    debugLog('Data channel open with sender');
+                };
+                dataChannel.onclose = () => {
+                    debugLog('Data channel closed with sender');
+                    if (!transferCancelled && connectionState !== 'completed') {
+                        showError('Connection closed by sender');
+                    }
+                };
+                dataChannel.onerror = (error) => {
+                    debugLog('Data channel error:', error);
+                    showError('Data transfer error occurred');
+                };
+            };
+        }
+
+        async function handleOffer(data) {
+            if (roomId && pc && pc.signalingState === 'stable') {
+                try {
+                    await pc.setRemoteDescription(new RTCSessionDescription(data.sdp));
+                    const answer = await pc.createAnswer();
+                    await pc.setLocalDescription(answer);
+                    socket.emit('answer', { roomId, sdp: pc.localDescription });
+                    debugLog('Answer created and sent');
+                } catch (error) {
+                    debugLog('Error handling offer:', error);
+                    showError('Failed to establish connection');
+                }
+            }
+        }
+
+        async function handleAnswer(data) {
+            if (pc && pc.signalingState === 'have-local-offer') {
+                try {
+                    await pc.setRemoteDescription(new RTCSessionDescription(data.sdp));
+                    debugLog('Answer received and processed');
+                } catch (error) {
+                    debugLog('Error handling answer:', error);
+                    showError('Failed to establish connection');
+                }
+            }
+        }
+
+        async function handleIceCandidate(data) {
+            if (pc) {
+                try {
+                    await pc.addIceCandidate(new RTCIceCandidate(data.candidate));
+                    debugLog('ICE candidate added');
+                } catch (error) {
+                    debugLog('Error adding ICE candidate:', error);
+                }
+            }
+        }
+
+
+        function handleFileMeta(metadata) {
+            debugLog('Received file metadata:', metadata);
+
+            if (!validateFile({ size: metadata.size, type: metadata.type || '', name: metadata.name })) {
+                cancelTransfer();
+                return;
+            }
+
+            receivingFile = metadata;
+            document.getElementById('file-name').textContent = metadata.name;
+
+            // Format file size appropriately
+            let sizeText;
+            if (metadata.size < 1024) {
+                sizeText = `${metadata.size} B`;
+            } else if (metadata.size < 1024 * 1024) {
+                sizeText = `${(metadata.size / 1024).toFixed(1)} KB`;
+            } else if (metadata.size < 1024 * 1024 * 1024) {
+                sizeText = `${(metadata.size / 1024 / 1024).toFixed(1)} MB`;
+            } else {
+                sizeText = `${(metadata.size / 1024 / 1024 / 1024).toFixed(1)} GB`;
+            }
+
+            document.getElementById('file-size').textContent = sizeText;
+            document.getElementById('receive-status').textContent = 'Ready to download.';
+            downloadBtn.disabled = false;
+        }
+
+        function cancelTransfer() {
+            transferCancelled = true;
+            if (dataChannel && dataChannel.readyState === 'open') {
+                dataChannel.send(JSON.stringify({ type: 'cancel' }));
+            }
+            cleanup();
+            showError('Transfer cancelled');
+        }
+
+        async function acceptAndSaveFile() {
+            downloadBtn.disabled = true;
+
+            if (!dataChannel || dataChannel.readyState !== 'open') {
+                showError('Connection not ready. Please wait and try again.');
+                downloadBtn.disabled = false;
+                return;
+            }
+
+            const startTransfer = () => {
+                try {
+                    resetProgressTracking();
+                    dataChannel.send(JSON.stringify({ type: 'start' }));
+                    debugLog('Sent start signal to sender.');
+                    document.getElementById('receive-status').textContent = 'Transfer starting...';
+                } catch (error) {
+                    debugLog('Error starting transfer:', error);
+                    showError('Failed to start transfer');
+                    downloadBtn.disabled = false;
+                }
+            };
+
+            if ('showSaveFilePicker' in window) {
+                try {
+                    const handle = await window.showSaveFilePicker({
+                        suggestedName: receivingFile.name,
+                        types: receivingFile.name.includes('.') ? [{
+                            description: 'Files',
+                            accept: { '*/*': ['.' + receivingFile.name.split('.').pop()] }
+                        }] : undefined
+                    });
+                    fileWriter = await handle.createWritable();
+                    downloadBtn.textContent = 'Saving...';
+                    document.getElementById('receive-status').textContent = 'Saving file directly to disk...';
+                    startTransfer();
+                } catch (err) {
+                    debugLog('File save picker cancelled or failed:', err);
+                    if (err.name !== 'AbortError') {
+                        showError('Failed to save file');
+                    } else {
+                        document.getElementById('receive-status').textContent = 'Save cancelled.';
+                    }
+                    downloadBtn.disabled = false;
+                }
+            } else {
+                downloadBtn.textContent = 'Downloading...';
+                document.getElementById('receive-status').textContent = 'Preparing download...';
+                startTransfer();
+            }
+        }
+
+        async function handleDataChannelMessage(event) {
+            if (transferCancelled || transferCompleting) {
+                debugLog('Transfer cancelled or completing, ignoring data');
+                return;
+            }
+
+            if (connectionState === 'completed') {
+                debugLog('Transfer already completed, ignoring extra data');
+                return;
+            }
+
+            try {
+                if (fileWriter) {
+                    if (receivedSize + event.data.byteLength >= receivingFile.size) {
+                        debugLog('Final chunk received, preparing for completion');
+                    }
+
+                    try {
+                        await fileWriter.write(event.data);
+                        receivedSize += event.data.byteLength;
+                        updateProgressBar('receive-progress', receivedSize, receivingFile.size);
+
+                        if (receivedSize >= receivingFile.size && !transferCompleting) {
+                            debugLog('All data received, initiating finalization');
+                            transferCompleting = true;
+                            finalizeReceivedFile();
+                        }
+                    } catch (writeError) {
+                        debugLog('Write error to file stream:', writeError);
+                        showError('Error writing data to file');
+                        cancelTransfer();
+                    }
+                } else {
+                    if (receiveBuffer.length > 1000) {
+                        showError('File too large for in-memory download. Please use a browser that supports direct file saving.');
+                        cancelTransfer();
+                        return;
+                    }
+
+                    receiveBuffer.push(event.data);
+                    receivedSize += event.data.byteLength;
+                    updateProgressBar('receive-progress', receivedSize, receivingFile.size);
+
+                    if (receivedSize >= receivingFile.size && !transferCompleting) {
+                        transferCompleting = true;
+                        finalizeReceivedFile();
+                    }
+                }
+            } catch (error) {
+                debugLog('Error handling data:', error);
+                showError('Error saving file data');
+                cancelTransfer();
+            }
+        }
+
+        async function finalizeReceivedFile() {
+            if (transferCancelled) {
+                return;
+            }
+
+            debugLog('Finalizing received file');
+
+            try {
+                if (fileWriter) {
+                    debugLog('Closing file writer to flush data to disk');
+                    updateProgressBar('receive-progress', receivingFile.size, receivingFile.size);
+                    document.getElementById('receive-status').textContent = 'Finalizing file...';
+
+                    await fileWriter.close();
+                    debugLog('File System API write completed');
+
+                    connectionState = 'completed';
+                    showSuccess('Transfer completed! File saved successfully.');
+                    setTimeout(() => {
+                        document.getElementById('receive-status').textContent = 'Transfer completed! File saved successfully.';
+                        document.getElementById('receive-status').style.color = '#28a745';
+                    }, 50);
+
+                    socket.emit('transfer-confirmed', { roomId });
+                    debugLog('Confirmation sent to sender');
+
+                    downloadBtn.style.display = 'none';
+                    cancelBtn.style.display = 'none';
+                    trySendBtn.style.display = 'block';
+                } else if (receiveBuffer.length > 0) {
+                    debugLog('Using blob fallback for download');
+                    updateProgressBar('receive-progress', receivingFile.size, receivingFile.size);
+                    document.getElementById('receive-status').textContent = 'Preparing download...';
+
+                    const receivedBlob = new Blob(receiveBuffer);
+                    receiveBuffer = [];
+
+                    const downloadLink = document.createElement('a');
+                    downloadLink.href = URL.createObjectURL(receivedBlob);
+                    downloadLink.download = receivingFile.name;
+                    document.body.appendChild(downloadLink);
+                    downloadLink.click();
+                    document.body.removeChild(downloadLink);
+
+                    setTimeout(() => URL.revokeObjectURL(downloadLink.href), 1000);
+
+                    connectionState = 'completed';
+                    showSuccess('File received successfully!');
+                    setTimeout(() => {
+                        document.getElementById('receive-status').textContent = 'File received successfully!';
+                        document.getElementById('receive-status').style.color = '#28a745';
+                    }, 50);
+                    downloadBtn.style.display = 'none';
+                    cancelBtn.style.display = 'none';
+                    trySendBtn.style.display = 'block';
+
+                    socket.emit('transfer-confirmed', { roomId });
+                    debugLog('Blob download completed, confirmation sent to sender');
+                }
+            } catch (error) {
+                debugLog('Error in finalizeReceivedFile:', error);
+                showError('Error completing file transfer');
+                socket.emit('transfer-confirmed', { roomId });
+            }
+        }
+
+        function handleTransferConfirmed() {
+            // This function is not used in receiver, but kept for compatibility
+        }
+
+    </script>
+
+    <footer class="footer-main">
+        <p>&copy; 2025 LargeFileTransfer.org. All rights reserved.</p>
+        <p>
+            <a href="/privacy">Privacy Policy</a> |
+            <a href="/terms">Terms of Service</a>
+        </p>
+    </footer>
+</body>
+</html>
