@@ -29,7 +29,11 @@ const io = new Server(server, {
         origin: process.env.NODE_ENV === 'production'
             ? ["https://largefiletransfer.org"] // TODO: Replace with your actual domain
             : ["http://localhost:3000", "http://127.0.0.1:3000"],
-    }
+    },
+    // Ensure Socket.io client is served
+    serveClient: true,
+    // Add path configuration for production
+    path: '/socket.io/'
 });
 
 const PORT = process.env.PORT || 3000;
@@ -50,6 +54,11 @@ app.use((req, res, next) => {
 
 // Serve static files (e.g., socket.io.js)
 app.use(express.static(path.join(__dirname)));
+
+// Explicitly serve Socket.io client library (backup route)
+app.get('/socket.io/socket.io.js', (req, res) => {
+    res.sendFile(require.resolve('socket.io/client-dist/socket.io.js'));
+});
 
 // Redirect root to /send for a better user experience
 app.get('/(|/)', (req, res) => {
