@@ -24,7 +24,6 @@ setInterval(() => {
     }
 }, RATE_LIMIT_WINDOW);
 
-  // In server.js
 const io = new Server(server, {
     cors: {
         origin: process.env.NODE_ENV === 'production'
@@ -45,8 +44,8 @@ const PORT = process.env.PORT || 3000;
 app.use((req, res, next) => {
     const isProduction = process.env.NODE_ENV === 'production';
     const connectSrc = isProduction
-        ? "'self' wss://largefiletransfer.org https://cdnjs.cloudflare.com"
-        : "'self' ws://localhost:3000 wss://localhost:3000 https://cdnjs.cloudflare.com";
+        ? "'self' https://largefiletransfer.org wss://largefiletransfer.org https://cdnjs.cloudflare.com"
+        : "'self' http://localhost:3000 ws://localhost:3000 wss://localhost:3000 https://cdnjs.cloudflare.com";
 
     res.setHeader(
         'Content-Security-Policy',
@@ -85,9 +84,9 @@ app.get('/send(|/)', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-// Handle receiver route with dedicated receive page
+// Handle receiver route with main index.html (since you're using single page app)
 app.get('/receive/:roomId', (req, res) => {
-    res.sendFile(path.join(__dirname, 'receive.html'));
+    res.sendFile(path.join(__dirname, 'index.html'));
 });
 
 // Secure TURN server configuration endpoint
