@@ -10,7 +10,7 @@
 
     <!-- PWA Meta Tags -->
     <link rel="manifest" href="/manifest.json">
-    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="DirectDrop">
     <link rel="apple-touch-icon" href="/icon-192.png">
@@ -386,11 +386,45 @@
                 navigator.serviceWorker.register('/sw.js')
                     .then(function(registration) {
                         console.log('ServiceWorker registration successful');
+
+                        // Request notification permission
+                        if ('Notification' in window && Notification.permission === 'default') {
+                            Notification.requestPermission();
+                        }
+
+                        // Register for periodic background sync (if supported)
+                        if ('periodicSync' in registration) {
+                            registration.periodicSync.register('check-updates', {
+                                minInterval: 24 * 60 * 60 * 1000, // 24 hours
+                            });
+                        }
                     })
                     .catch(function(error) {
                         console.log('ServiceWorker registration failed: ', error);
                     });
+
+                // Listen for messages from service worker
+                navigator.serviceWorker.addEventListener('message', function(event) {
+                    if (event.data.type === 'RETRY_CONNECTION') {
+                        // Retry connection logic
+                        if (connectionState === 'failed' && !transferCancelled) {
+                            console.log('Retrying connection due to background sync');
+                            // You can add reconnection logic here
+                        }
+                    }
+                });
             });
+        }
+
+        // Function to request background sync on connection failure
+        function requestBackgroundSync() {
+            if ('serviceWorker' in navigator && 'sync' in window.ServiceWorkerRegistration.prototype) {
+                navigator.serviceWorker.ready.then(function(registration) {
+                    return registration.sync.register('retry-connection');
+                }).catch(function(error) {
+                    console.log('Background sync registration failed:', error);
+                });
+            }
         }
     </script>
     <script>

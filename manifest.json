@@ -14,15 +14,46 @@
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "maskable any"
-    },
-    {
-      "src": "/icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "maskable any"
     }
   ],
   "categories": ["productivity", "utilities"],
   "lang": "en",
-  "dir": "ltr"
+  "dir": "ltr",
+  "screenshots": [
+    {
+      "src": "/secure-large-file-transfer-peer-to-peer.jpg",
+      "sizes": "750x392",
+      "type": "image/jpeg",
+      "form_factor": "wide",
+      "label": "Secure large file transfer with peer-to-peer technology"
+    },
+    {
+      "src": "/upload-file.PNG",
+      "sizes": "431x290",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Upload and select files to transfer"
+    },
+    {
+      "src": "/generate-temporary-sharing-links.PNG",
+      "sizes": "494x458",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Generate secure sharing links with QR codes"
+    },
+    {
+      "src": "/download-file.PNG",
+      "sizes": "405x356",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Download files directly to your device"
+    },
+    {
+      "src": "/large-file-transfer.png",
+      "sizes": "any",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "DirectDrop - Large file transfer overview"
+    }
+  ]
 }
