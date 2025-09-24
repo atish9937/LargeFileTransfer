@@ -399,7 +399,8 @@
                                     minInterval: 24 * 60 * 60 * 1000, // 24 hours
                                 });
                             }).catch(function(error) {
-                                console.log('Periodic sync registration failed:', error);
+                                // Periodic sync permission denied - this is normal
+                                // Only available for highly engaged PWAs
                             });
                         }
                     })
