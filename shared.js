@@ -10,7 +10,7 @@ const MAX_FILE_SIZE = 10 * 1024 * 1024 * 1024; // 10GB limit
 const ALLOWED_FILE_TYPES = []; // Empty array means all types allowed
 
 // Debug mode - set to false for production
-const DEBUG_MODE = window.location.hostname === 'localhost';
+const DEBUG_MODE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
 
 // ===== DEBUG LOGGING =====
 function debugLog(...args) {
@@ -45,13 +45,13 @@ async function loadTurnConfig() {
         if (response.ok) {
             const config = await response.json();
             rtcConfig = config;
-            debugLog('WebRTC configuration loaded:', rtcConfig);
+            
         } else {
             debugLog('Failed to load TURN config, using STUN-only');
         }
     } catch (error) {
         debugLog('Error loading TURN config:', error);
-        debugLog('Falling back to STUN-only configuration');
+       
     }
 }
 
@@ -86,7 +86,7 @@ function checkBrowserCompatibility() {
     }
 
     if (!('showSaveFilePicker' in window)) {
-        warnings.push('Direct file saving is not supported in this browser. Files will be downloaded to your default download folder.');
+        warnings.push('Direct file saving is not supported in this browser. Files up to 4GB will be downloaded to your default download folder. For file transfer up to 10GB use Google Chrome or Microsoft Edge.');
     }
 
     if (!window.crypto || !window.crypto.getRandomValues) {
@@ -97,11 +97,24 @@ function checkBrowserCompatibility() {
 }
 
 function showCompatibilityWarnings() {
+    // Check if device is mobile/tablet
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
+                     window.innerWidth <= 768;
+
     const warnings = checkBrowserCompatibility();
-    if (warnings.length > 0) {
+
+    // Filter out the direct saving warning on mobile devices
+    const filteredWarnings = warnings.filter(warning => {
+        if (isMobile && warning.includes('Direct file saving is not supported')) {
+            return false; // Hide this warning on mobile
+        }
+        return true;
+    });
+
+    if (filteredWarnings.length > 0) {
         const warningDiv = document.createElement('div');
         warningDiv.className = 'compatibility-warning';
-        warningDiv.innerHTML = '<strong>Browser Compatibility:</strong><br>' + warnings.join('<br>');
+        warningDiv.innerHTML = '<strong>Browser Compatibility:</strong><br>' + filteredWarnings.join('<br>');
 
         const container = document.querySelector('.container');
         container.insertBefore(warningDiv, container.firstChild);
@@ -139,12 +152,12 @@ async function handleOffer(data, pc, socket, roomId) {
             const answer = await pc.createAnswer();
             await pc.setLocalDescription(answer);
             socket.emit('answer', { roomId, sdp: pc.localDescription });
-            debugLog('Answer created and sent');
+            
 
             // Process any queued ICE candidates
             await processQueuedIceCandidates(pc);
         } catch (error) {
-            debugLog('Error handling offer:', error);
+       
             showError('Failed to establish connection');
         }
     }
@@ -154,12 +167,12 @@ async function handleAnswer(data, pc) {
     if (pc && pc.signalingState === 'have-local-offer') {
         try {
             await pc.setRemoteDescription(new RTCSessionDescription(data.sdp));
-            debugLog('Answer received and processed');
+        
 
             // Process any queued ICE candidates
             await processQueuedIceCandidates(pc);
         } catch (error) {
-            debugLog('Error handling answer:', error);
+        
             showError('Failed to establish connection');
         }
     }
@@ -200,7 +213,7 @@ async function processQueuedIceCandidates(pc) {
 // Clear ICE candidate queue (call when creating new peer connection)
 function clearIceCandidateQueue() {
     iceCandidateQueue = [];
-    debugLog('ICE candidate queue cleared');
+    
 }
 
 // ===== PROGRESS TRACKING =====

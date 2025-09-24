@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="index, follow">
-    <meta name="author" content="DirectDrop">
     <link rel="canonical" href="https://largefiletransfer.org/">
     <meta name="theme-color" content="#667eea">
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
@@ -29,6 +28,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="/style.css">
 
     <!-- Structured Data for SEO -->
@@ -65,28 +65,23 @@
     </script>
 </head>
 <body>
-    <nav class="navbar">
-        <div class="navbar-brand" role="banner">LargeFileTransfer.org</div>
-        <ul class="navbar-nav">
-            <li><a href="/">Home</a></li>
-            <li><a href="/send">Send File</a></li>
-        </ul>
-    </nav>
+    <div id="navbar-container"></div>
 
     <main class="main-content-wrapper" role="main">
 
     <section class="container" aria-label="File transfer interface">
         <!-- Initial Screen -->
         <div id="select-screen" role="region" aria-label="File selection">
-            <h1>Free Large File Transfer - End To End Encryption  </h1>
-            <p class="subtitle">Transfer files up to 10GB directly to any device with end to end encryption. No registration, no file size limits, completely free large file transfer service
-                Transfer any files from mobile to desktop or desktop to desktop with peer to peer technology.
-                No restrictions on file types - send videos, images, documents, archives and more.
+            <h1>Send Large Files Free - Up to 10GB File Transfer</h1>
+            <p class="subtitle">
+                Need to send files too large for email? Transfer any file up to 10GB instantly with our secure file sharing service.
+                No registration required, no uploads to servers - just direct, encrypted file transfer between your devices.
+                Perfect for sending videos, photos, documents, and any file type that's too big for traditional email.
             </p>
             <div class="drop-area" id="drop-area" role="button" tabindex="0" aria-label="Drop zone for file upload">
+                <p style="font-size: 0.9em; margin-bottom: 10px; color: #666;">Send files up to 10GB • No registration required</p>
                 <p>Drag & Drop your large file here</p>
-                <p style="font-size: 0.9em; margin-top: 10px; color: #666;">Send files up to 10GB • No registration required</p>
-                <p style="font-size: 0.9em; margin-top: 5px;">or</p>
+                <p style="font-size: 0.9em; margin-top: 3px;">or</p>
                 <button class="btn" id="select-file-btn" aria-label="Choose file to send">Choose File to Send</button>
             </div>
             <input type="file" id="file-input" class="file-input" aria-label="File input" accept="*/*" />
@@ -135,52 +130,51 @@
 
         <!-- Why Choose LargeFileTransfer Section -->
         <div class="why-choose-section">
-            <h2 style="text-align: center;"> What is LargeFileTransfer?</h2>
-            <p>LargeFileTransfer is a free service that allows you transfer any file to any device.
-            Its a peer-to-peer file transfer service that create a direct connection between devices, and do fast and secure file transfers.
+            <h2 style="text-align: center;">The Fastest Way to Send Large Files Online</h2>
+            <p>Tired of file size limits and slow uploads? LargeFileTransfer.org is the free solution for sending large files instantly.
+            Our peer-to-peer technology creates a direct connection between your devices, making file transfers up to 3x faster than traditional cloud services.
+            No more waiting for uploads or dealing with "file too large" errors.
             </p>
             <img src="/secure-large-file-transfer-peer-to-peer.jpg" alt="Large File Transfer - Peer to Peer File Sharing" style="width:100%; max-width:600px; border-radius:16px; box-shadow:0 4px 16px rgba(0,0,0,0.1); margin: 20px auto; display:block;">
             <div class="advantages-container">
                 <div class="advantage-item">
                     <div class="advantage-icon">⚡</div>
                     <div class="advantage-content">
-                        <h3>Faster Transfer Speed</h3>
-                        <p>You will see faster file transfers with our direct peer-to-peer connection. Instead of sending your files through slow server networks like other file-sharing services, 
-                            LargeFileTransfer.org sets up a direct link between your devices to get the maximum speed possible.</p>
+                        <h3>Send Large Files Faster Than Email or Cloud Storage</h3>
+                        <p>Stop waiting hours for files to upload! Our direct peer-to-peer connection means your large files transfer at maximum speed - often 3x faster than Google Drive, Dropbox, or WeTransfer.</p>
 
-                        <p>You get the fastest speeds because our technology automatically adjusts to your network, saving bandwidth. This means you can send even the biggest files as fast as your connection allows.
-                            You can transfer a 10GB file in just minutes. In fact, you'll find it's up to three times faster than other services, making it the quickest way to send large files.</p>
+                        <p>Whether you're sending a 5GB video file or a 10GB project folder, the transfer happens directly between devices without slow server uploads.
+                            Most users see their large files transfer in just minutes, not hours. It's the quickest way to share big files when email says "attachment too large."</p>
                     </div>
                 </div>
 
                 <div class="advantage-item">
                     <div class="advantage-icon">🛡️</div>
                     <div class="advantage-content">
-                        <h3>One To One Sharing With E2E Encryption</h3>
-                        <p>You share files directly with one other person, protected by high level encryption. This means your private files stay completely private from the moment they leave your device until they arrive. 
-                            They never uploaded to our servers, so there's no risk of a data breach.</p>
+                        <h3>More Secure Than WeTransfer or Email Attachments</h3>
+                        <p>Your files deserve better security than basic email or cloud sharing. Every file transfer uses military-grade end-to-end encryption, ensuring your sensitive documents, photos, and videos stay completely private.</p>
                         <p>
-                            No one can see your files while transferring to other device. It's the secure choice for lawyers, doctors, bankers, and anyone who needs to send sensitive information to anyoner over the internet.
+                            Unlike cloud services that store your files on servers, we create a direct encrypted connection between devices. Perfect for confidential business documents, medical records, legal files, or any sensitive information that needs secure file sharing.
                         </p>
                     </div>
-                    
+
                 </div>
                 
                 <div class="advantage-item">
                     <div class="advantage-icon">🎯</div>
                     <div class="advantage-content">
-                        <h3>Temporar Secure File Sharing Links</h3>
-                        <p>If you are looking for temporary sharing link for you files, then using our tool is the best option.                            
-                         The file sharing links expire after the transfer is complete, so your files are never stored online longer than necessary.
-                         Hence, you can share sensitive documents with anyone over internet.
+                        <h3>No File Size Limits Like Email or Messaging Apps</h3>
+                        <p>Fed up with "file too large" errors? We support files up to 10GB - that's 400 times larger than most email limits. Send full-resolution videos, complete photo albums, large presentations, or entire project folders without compression.</p>
+                        <p>
+                         Our temporary sharing links work perfectly for one-time file transfers. Links expire automatically after use, so your files stay private and aren't floating around the internet forever.
                         </p>
                     </div>
                 </div>
                 <div class="how-to-section">
-            <h2>📁 How to Transfer Large Files </h2>
+            <h2>📁 How to Send Large Files in 3 Simple Steps</h2>
             <p class="how-to-intro">
-                Using our online tool is the easiest way to send large files for free. 
-                Just follow these simple steps to securely transfer files up to 10GB directly between devices with end-to-end encryption. 
+                Sending large files online doesn't have to be complicated. Our browser-based file transfer tool makes it as easy as sending an email.
+                No software downloads, no account creation - just follow these three steps to send files up to 10GB with complete security.
             </p>
 
             <div class="steps-container">
@@ -236,51 +230,44 @@
                     </p>
                     <h3>Send Healthcare Documents</h3> 
                     <p>Share medical imaging files, patient records, and other healthcare documents securely. Our end-to-end encryption ensures that sensitive health information remains confidential, making it ideal for healthcare professionals who need to transfer large files quickly and safely.</p>
-                         </p>
+                    </p>
+                    <h3>Send Server Logs - Quick Troubleshooting</h3>
+                    <p>
+                        IT professionals and system administrators can use our tool to send large server logs, system backups, and configuration files securely. 
+                        The peer-to-peer transfer can send the logs to vendor or to colleague without any FTP or cloud storage services.
+                        This is useful when logs are needed for troubleshooting or audits quickly.
+                    </p>
                 </div>
-            </div>
-
-            <div class="why-choose-cta">
-                <h2>🚀 Benifits of LargeFileTransfer</h2>
-                <p>Join thousands of professionals who rely on LargeFileTransfer.org for their most important file sharing needs. Start transferring large files with enterprise-grade security and performance - completely free for all users.</p>
-                <button class="btn why-choose-btn" onclick="document.getElementById('drop-area').scrollIntoView({behavior: 'smooth'})">Start Professional Transfer</button>
             </div>
         </div>
 
         <!-- How to Transfer Large Files Section -->
         
             <div class="how-to-advantages">
-                <h3>🏆 Professional File Transfer Advantages</h3>
+                <h3>Why Choose Our File Transfer Service Over Alternatives</h3>
                 <div class="advantages-content">
-                    <p><strong>Zero Registration Requirements:</strong> Start transferring large files immediately without creating accounts, providing personal information, or navigating complex setup processes. Professional-grade functionality accessible instantly.</p>
+                    <p><strong>Better Than Email for Large Files:</strong> While email limits you to 25MB attachments, we handle files up to 10GB without compression. No more "attachment too large" errors or splitting files into multiple parts.</p>
 
-                    <p><strong>Unlimited File Size Support:</strong> Transfer files up to 10GB without compression or quality loss. Perfect for 4K videos, CAD files, software distributions, complete project folders, and enterprise-level data sharing requirements.</p>
+                    <p><strong>Faster Than Cloud Storage:</strong> Skip the slow upload-then-download process of Google Drive or Dropbox. Our direct peer-to-peer connection transfers files 3x faster than traditional cloud services.</p>
 
-                    <p><strong>Direct Peer-to-Peer Technology:</strong> Revolutionary WebRTC implementation ensures files transfer directly between devices, eliminating intermediate servers and reducing transfer times while maximizing security and privacy protection.</p>
+                    <p><strong>More Private Than WeTransfer:</strong> Your files never touch our servers. Unlike services that store your data temporarily, we create a direct encrypted tunnel between devices for maximum privacy.</p>
 
-                    <p><strong>Military-Grade Encryption:</strong> Every file transfer utilizes advanced end-to-end encryption protocols, ensuring your sensitive data remains completely secure throughout the entire transfer process without compromising on speed or usability.</p>
+                    <p><strong>No Registration Like Dropbox Requires:</strong> Start sending large files immediately without accounts, passwords, or personal information. Professional file sharing made simple.</p>
 
-                    <p><strong>Universal Device Compatibility:</strong> Works seamlessly across all modern browsers and operating systems including Windows, macOS, Linux, iOS, and Android without requiring additional software installations or plugins.</p>
+                    <p><strong>Works on Any Device:</strong> Send large files from phone to computer, laptop to tablet, or any combination. Compatible with all modern browsers - no apps to download or software to install.</p>
                 </div>
             </div>
 
-            <div class="how-to-cta">
-                <h3>🎯 Start Professional File Transfer</h3>
-                <p>Experience the future of secure large file sharing with LargeFileTransfer.org. Complete transfers in under 30 seconds with enterprise-grade security and unlimited usage - completely free for all users.</p>
-                <button class="btn how-to-btn" onclick="document.getElementById('drop-area').scrollIntoView({behavior: 'smooth'})">Begin Large File Transfer</button>
-            </div>
-
-            <!-- FAQ Section -->
             <div class="faq-section">
                 <h2>❓ Frequently Asked Questions</h2>
                 <div class="faq-container">
                     <div class="faq-item">
                         <div class="faq-question" onclick="toggleFAQ(this)">
-                            <h3>How large files can I transfer for free?</h3>
+                            <h3>How to send files larger than 25MB that are too big for email?</h3>
                             <span class="faq-toggle">+</span>
                         </div>
                         <div class="faq-answer">
-                            <p>You can transfer files up to 10GB completely free with no registration required. There are no daily limits or restrictions on the number of files you can send.</p>
+                            <p>When email says "attachment too large," simply use our free file transfer service. We handle files up to 10GB - that's 400 times larger than typical email limits. Just drag and drop your file, get a sharing link, and send it to anyone instantly.</p>
                         </div>
                     </div>
 
@@ -316,11 +303,11 @@
 
                     <div class="faq-item">
                         <div class="faq-question" onclick="toggleFAQ(this)">
-                            <h3>How fast are the file transfers?</h3>
+                            <h3>Is this faster than WeTransfer, Google Drive, or Dropbox?</h3>
                             <span class="faq-toggle">+</span>
                         </div>
                         <div class="faq-answer">
-                            <p>Transfer speeds depend on your internet connection since files transfer directly between devices. Most users see speeds up to 3x faster than traditional cloud-based file sharing services because there's no server bottleneck.</p>
+                            <p>Yes! Our peer-to-peer technology is significantly faster than cloud services. While WeTransfer and Google Drive require uploading to servers first, we transfer files directly between devices - often 3x faster. A 1GB file that takes 15 minutes on cloud services typically transfers in under 5 minutes with us.</p>
                         </div>
                     </div>
 
@@ -365,11 +352,21 @@
                     </div>
                 </div>
             </div>
+
+            <div class="how-to-cta">
+                <h3>🎯 Start Professional File Transfer</h3>
+                <p>Experience the future of secure large file sharing with LargeFileTransfer.org. Complete transfers in under 30 seconds with enterprise-grade security and unlimited usage - completely free for all users.</p>
+                <button class="btn how-to-btn" onclick="document.getElementById('drop-area').scrollIntoView({behavior: 'smooth'})">Begin Large File Transfer</button>
+            </div>
+
+            <!-- FAQ Section -->
+            
         </div>
 
     </section>
     </main>
 
+    <script src="/navbar.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.5/socket.io.min.js" integrity="sha512-11t8Q+vY9JlCrr+PveZKTYJq8n7O09Y5X/pk/aMd3vJugSvu4xOunGEUzaADqL3I8cZKE/pBwwCfXzDkRJh2sQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="/shared.js"></script>
@@ -418,7 +415,7 @@
         const pathParts = path.split('/');
 
         // Only initialize file transfer functionality on relevant pages
-        const isFileTransferPage = path.startsWith('/send') || path.startsWith('/receive/') || path === '/';
+        const isFileTransferPage = path.startsWith('/receive/') || path === '/';
 
         if (isFileTransferPage) {
             // Initialize file transfer functionality
@@ -467,11 +464,11 @@
 
             const trySendBtn = document.getElementById('try-send-btn'); // Declare here
             trySendBtn.addEventListener('click', () => {
-                window.location.href = '/send';
+                window.location.href = '/';
             });
 
         } else {
-            // --- Sender Logic (assume /send or root redirected to /send) ---
+            // --- Sender Logic (home page handles sending) ---
             selectScreen.style.display = 'block'; // Make sure sender screen is visible
 
             showCompatibilityWarnings();
@@ -506,7 +503,7 @@
                     copyLinkBtn.textContent = 'Copied!';
                     setTimeout(() => { copyLinkBtn.textContent = 'Copy Link'; }, 2000);
                 }).catch(err => {
-                    debugLog('Failed to copy link: ', err);
+                   
                     showError('Failed to copy link to clipboard', true);
                 });
             });
@@ -521,7 +518,7 @@
                             url: shareLink.value
                         });
                     } catch (err) {
-                        debugLog('Error sharing:', err);
+                        
                         showError('Failed to share link', true);
                     }
                 });
@@ -567,10 +564,10 @@
                 clearTimeout(waitingTimeout);
             }
 
-            debugLog(`Starting waiting timeout for ${formatTimeout(WAITING_FOR_RECEIVER_TIMEOUT)}`);
+           
 
             waitingTimeout = setTimeout(() => {
-                debugLog('Waiting timeout expired - no receiver joined');
+                
                 document.getElementById('share-status').textContent = `Share link expired. No one joined within ${formatTimeout(WAITING_FOR_RECEIVER_TIMEOUT)}.`;
                 document.getElementById('share-status').style.color = '#dc3545';
                 // Show send another button
@@ -667,12 +664,12 @@
             });
 
             socket.on('disconnect', () => {
-                debugLog('Disconnected from signaling server');
+               
                 showError('Lost connection to signaling server', true);
             });
 
             socket.on('connect_error', (error) => {
-                debugLog('Signaling server connection error:', error);
+                
                 showError('Could not connect to signaling server');
             });
 
@@ -789,7 +786,7 @@
             // It will be started when someone joins the room
 
             pc.oniceconnectionstatechange = () => {
-                debugLog('ICE connection state:', pc.iceConnectionState);
+              
 
                 switch (pc.iceConnectionState) {
                     case 'connected':
@@ -827,8 +824,11 @@
                     ordered: true
                 });
 
+                // Ensure consistent binary data handling across browsers
+                dataChannel.binaryType = 'arraybuffer';
+
                 dataChannel.onopen = () => {
-                    debugLog('Data channel open');
+                   
                     document.getElementById('share-status').textContent = 'Recipient connected. Waiting for them to accept the file.';
                     // Send metadata immediately so the receiver can display file info
                     socket.emit('file-meta', { roomId, metadata: { name: fileToSend.name, size: fileToSend.size } });
@@ -838,12 +838,25 @@
                     try {
                         const message = JSON.parse(event.data);
                         if (message.type === 'start') {
-                            debugLog('Receiver is ready. Starting file send.');
+                          
                             document.getElementById('share-status').textContent = 'Sending file...';
                             sendFile();
                         } else if (message.type === 'cancel') {
                             showError('Transfer cancelled by recipient');
                             cleanup();
+                        } else if (message.type === 'completed') {
+                          
+                            showSuccess('File transferred successfully!');
+
+                            // Update UI to show completion without redirecting
+                            document.getElementById('share-status').textContent = 'Transfer completed successfully!';
+                            document.getElementById('share-status').style.color = '#28a745';
+
+                            // Show "Send Another File" button
+                            const sendAnotherBtn = document.getElementById('send-another-btn');
+                            const cancelBtn = document.getElementById('cancel-btn');
+                            if (sendAnotherBtn) sendAnotherBtn.style.display = 'block';
+                            if (cancelBtn) cancelBtn.style.display = 'none';
                         }
                     } catch (e) {
                         debugLog("Received non-JSON message on data channel:", e);
@@ -851,12 +864,12 @@
                 };
 
                 dataChannel.onerror = (error) => {
-                    debugLog('Data channel error:', error);
+                
                     showError('Data transfer error occurred');
                 };
 
                 dataChannel.onclose = () => {
-                    debugLog('Data channel closed');
+                   
                     // Only show error if transfer was not completed successfully
                     if (!transferCancelled && connectionState !== 'completed') {
                         showError('Connection closed unexpectedly');
@@ -865,19 +878,23 @@
             } else {
                 pc.ondatachannel = event => {
                     dataChannel = event.channel;
+
+                    // Ensure consistent binary data handling across browsers
+                    dataChannel.binaryType = 'arraybuffer';
+
                     dataChannel.onmessage = handleDataChannelMessage;
                     dataChannel.onopen = () => {
                         debugLog('Data channel open with sender');
                     };
                     dataChannel.onclose = () => {
-                        debugLog('Data channel closed with sender');
+                     
                         // Only show error if transfer was not completed successfully
                         if (!transferCancelled && connectionState !== 'completed') {
                             showError('Connection closed by sender');
                         }
                     };
                     dataChannel.onerror = (error) => {
-                        debugLog('Data channel error:', error);
+                       
                         showError('Data transfer error occurred');
                     };
                 };
@@ -897,9 +914,9 @@
                 const offer = await pc.createOffer();
                 await pc.setLocalDescription(offer);
                 socket.emit('offer', { roomId, sdp: pc.localDescription });
-                debugLog('Offer created and sent');
+                
             } catch (error) {
-                debugLog('Error creating offer:', error);
+                
                 showError('Failed to establish connection');
             }
         }
@@ -909,32 +926,90 @@
         function sendFile() {
             resetProgressTracking(); // Reset progress tracking for new transfer
             let offset = 0;
+            let chunkCount = 0;
+            let totalChunks = Math.ceil(fileToSend.size / CHUNK_SIZE);
+            let allDataSent = false;
+
+          
 
             const readSliceAndSend = () => {
+                if (offset >= fileToSend.size || transferCancelled) {
+                
+                    return;
+                }
+
                 const reader = new FileReader(); // Create a new reader for each slice
                 reader.onload = (event) => {
-                    if (dataChannel.readyState === 'open') {
-                        dataChannel.send(event.target.result);
-                        offset += event.target.result.byteLength;
-                        updateProgressBar('share-progress', offset, fileToSend.size);
+                    if (dataChannel.readyState === 'open' && !transferCancelled) {
+                        try {
+                            const originalArrayBuffer = event.target.result;
+                            const expectedSize = Math.min(CHUNK_SIZE, fileToSend.size - offset);
 
-                        if (offset < fileToSend.size && !transferCancelled) {
-                            if (dataChannel.bufferedAmount < CHUNK_SIZE * 8) {
-                                readSliceAndSend();
+                            // Trim ArrayBuffer if it's larger than expected
+                            let finalArrayBuffer;
+                            if (originalArrayBuffer.byteLength > expectedSize) {
+                                finalArrayBuffer = originalArrayBuffer.slice(0, expectedSize);
+                            } else {
+                                finalArrayBuffer = originalArrayBuffer;
                             }
-                        } else if (!transferCancelled) {
-                            // Don't show success yet, wait for receiver confirmation
-                            document.getElementById('share-status').textContent = 'File sent, waiting for confirmation...';
-                            // socket.emit('transfer-done', { roomId }); // Removed: Receiver will confirm completion
+
+                            const chunkSize = finalArrayBuffer.byteLength;
+                            chunkCount++;
+
+                            dataChannel.send(finalArrayBuffer);
+                            const newOffset = offset + chunkSize;
+
+                            // Update offset BEFORE checking completion to prevent infinite loop
+                            offset = newOffset;
+                            updateProgressBar('share-progress', offset, fileToSend.size);
+
+                           
+
+                            // Check if we've sent all the data
+                            if (offset >= fileToSend.size) {
+                                allDataSent = true;
+                                
+                                document.getElementById('share-status').textContent = 'File sent, waiting for receiver confirmation...';
+                                // Don't close connection - wait for receiver confirmation
+                                return; // Exit the function but keep connection open
+                            }
+
+                            // Continue sending if more data remains
+                            if (!transferCancelled) {
+                                // Fast approach - send immediately if buffer not full
+                                if (dataChannel.bufferedAmount < CHUNK_SIZE * 2) {  // Only 256KB threshold
+                                    readSliceAndSend();
+                                }
+                                // If buffer full, onbufferedamountlow will handle continuation
+                            }
+                        } catch (error) {
+                            
+                            showError('Error sending file chunk');
                         }
+                    } else {
+                        debugLog('Data channel not ready or transfer cancelled, skipping chunk');
                     }
                 };
-                const slice = fileToSend.slice(offset, offset + CHUNK_SIZE);
+
+                reader.onerror = (error) => {
+                    showError('Error reading file chunk');
+                };
+
+                reader.onloadend = (event) => {
+                    if (event.target.error) {
+                    } else {
+                    }
+                };
+
+                const remainingBytes = fileToSend.size - offset;
+                const sliceSize = Math.min(CHUNK_SIZE, remainingBytes);
+                const slice = fileToSend.slice(offset, offset + sliceSize);
+
                 reader.readAsArrayBuffer(slice);
             };
 
             dataChannel.onbufferedamountlow = () => {
-                if (offset < fileToSend.size && !transferCancelled) {
+                if (offset < fileToSend.size && !transferCancelled && !allDataSent) {
                     readSliceAndSend();
                 }
             };
@@ -1006,10 +1081,10 @@
                 try {
                     resetProgressTracking(); // Reset progress tracking for new transfer
                     dataChannel.send(JSON.stringify({ type: 'start' }));
-                    debugLog('Sent start signal to sender.');
+                    
                     document.getElementById('receive-status').textContent = 'Transfer starting...';
                 } catch (error) {
-                    debugLog('Error starting transfer:', error);
+                    
                     showError('Failed to start transfer');
                     downloadBtn.disabled = false;
                 }
@@ -1029,7 +1104,7 @@
                     document.getElementById('receive-status').textContent = 'Saving file directly to disk...';
                     startTransfer();
                 } catch (err) {
-                    debugLog('File save picker cancelled or failed:', err);
+                    
                     if (err.name !== 'AbortError') {
                         showError('Failed to save file');
                     } else {
@@ -1047,13 +1122,13 @@
 
         async function handleDataChannelMessage(event) {
             if (transferCancelled || transferCompleting) {
-                debugLog('Transfer cancelled or completing, ignoring data');
+                
                 return;
             }
 
             // Check if we've already completed the transfer
             if (connectionState === 'completed') {
-                debugLog('Transfer already completed, ignoring extra data');
+                
                 return;
             }
 
@@ -1071,12 +1146,12 @@
 
                         // Check if all data has been received
                         if (receivedSize >= receivingFile.size && !transferCompleting) {
-                            debugLog('All data received, initiating finalization');
+                          
                             transferCompleting = true; // Prevent multiple calls
                             finalizeReceivedFile();
                         }
                     } catch (writeError) {
-                        debugLog('Write error to file stream:', writeError);
+                  
                         showError('Error writing data to file');
                         cancelTransfer();
                     }
@@ -1093,7 +1168,7 @@
                     updateProgressBar('receive-progress', receivedSize, receivingFile.size);
                 }
             } catch (error) {
-                debugLog('Error handling data:', error);
+               
                 showError('Error saving file data');
                 cancelTransfer();
             }
@@ -1130,16 +1205,16 @@
                 return;
             }
 
-            debugLog('Finalizing received file');
+          
 
             try {
                 if (fileWriter) {
-                    debugLog('Closing file writer to flush data to disk');
+                  
                     updateProgressBar('receive-progress', receivingFile.size, receivingFile.size);
                     document.getElementById('receive-status').textContent = 'Finalizing file...';
 
                     await fileWriter.close();
-                    debugLog('File System API write completed');
+                  
 
                     connectionState = 'completed';
                     showSuccess('Transfer completed! You can now download the file.');
@@ -1149,7 +1224,7 @@
                     }, 50);
 
                     socket.emit('transfer-confirmed', { roomId });
-                    debugLog('Confirmation sent to sender');
+                    
                     // # hide the download button and cancel button
                     downloadBtn.style.display = 'none';
                     const cancelBtn = document.getElementById('cancel-btn');
@@ -1157,7 +1232,7 @@
                     const trySendBtn = document.getElementById('try-send-btn');
                     if (trySendBtn) trySendBtn.style.display = 'block'; // Show try send button
                 } else if (receiveBuffer.length > 0) {
-                    debugLog('Using blob fallback for download');
+                    
                     updateProgressBar('receive-progress', receivingFile.size, receivingFile.size);
                     document.getElementById('receive-status').textContent = 'Preparing download...';
 
@@ -1184,9 +1259,9 @@
                     if (cancelBtn) cancelBtn.style.display = 'none';
 
                     socket.emit('transfer-confirmed', { roomId });
-                    debugLog('Blob download completed, confirmation sent to sender');
+                    
                 } else {
-                    debugLog('Transfer done but no file saving in progress');
+                   
                     connectionState = 'completed';
                     const message = 'Transfer completed, but no file was saved. Click "Accept & Download" to save the file.';
                     showSuccess(message);
@@ -1198,10 +1273,10 @@
                     if (trySendBtn) trySendBtn.style.display = 'block'; // Show try send button
 
                     socket.emit('transfer-confirmed', { roomId });
-                    debugLog('No active save, sending confirmation to prevent sender hang');
+                  
                 }
             } catch (error) {
-                debugLog('Error in finalizeReceivedFile:', error);
+                
                 showError('Error completing file transfer');
                 socket.emit('transfer-confirmed', { roomId });
             }
@@ -1209,14 +1284,34 @@
 
         } // End of isFileTransferPage check
 
+
     </script>
     </div>
     <footer class="footer-main">
-        <p>&copy; 2025 LargeFileTransfer.org. All rights reserved.</p>
-        <p>
-            <a href="/privacy">Privacy Policy</a> |
-            <a href="/terms">Terms of Service</a>
-        </p>
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="/privacy">Privacy Policy</a>
+                <a href="/terms">Terms of Service</a>
+            </div>
+            <div class="footer-social">
+                <a href="https://twitter.com/intent/tweet?text=Check%20out%20LargeFileTransfer.org%20-%20Send%20large%20files%20up%20to%2010GB%20for%20free%20with%20end-to-end%20encryption!&url=https://largefiletransfer.org" target="_blank" rel="noopener" aria-label="Share on Twitter">
+                    <i class="fab fa-twitter"></i>
+                </a>
+                <a href="https://www.facebook.com/sharer/sharer.php?u=https://largefiletransfer.org" target="_blank" rel="noopener" aria-label="Share on Facebook">
+                    <i class="fab fa-facebook-f"></i>
+                </a>
+                <a href="https://www.linkedin.com/sharing/share-offsite/?url=https://largefiletransfer.org" target="_blank" rel="noopener" aria-label="Share on LinkedIn">
+                    <i class="fab fa-linkedin-in"></i>
+                </a>
+                <a href="https://reddit.com/submit?url=https://largefiletransfer.org&title=Free%20Large%20File%20Transfer%20-%20Send%20Files%20up%20to%2010GB" target="_blank" rel="noopener" aria-label="Share on Reddit">
+                    <i class="fab fa-reddit-alien"></i>
+                </a>
+                <a href="mailto:?subject=Check%20out%20LargeFileTransfer.org&body=I%20found%20this%20great%20tool%20for%20sending%20large%20files%20securely:%20https://largefiletransfer.org" aria-label="Share via Email">
+                    <i class="fas fa-envelope"></i>
+                </a>
+            </div>
+            <p class="footer-copyright">&copy; 2025 LargeFileTransfer.org. All rights reserved.</p>
+        </div>
     </footer>
 </body>
 </html>

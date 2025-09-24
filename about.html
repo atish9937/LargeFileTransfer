@@ -24,16 +24,11 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="/style.css">
 </head>
 <body>
-    <nav class="navbar">
-        <div class="navbar-brand">LargeFileTransfer.org</div>
-        <ul class="navbar-nav">
-            <li><a href="/">Home</a></li>
-            <li><a href="/send">Send File</a></li>
-        </ul>
-    </nav>
+    <div id="navbar-container"></div>
 
     <div class="main-content-wrapper">
         <div class="content">
@@ -59,11 +54,31 @@
     </div>
 
     <footer class="footer-main">
-        <p>&copy; 2025 LargeFileTransfer.org. All rights reserved.</p>
-        <p>
-            <a href="/privacy">Privacy Policy</a> |
-            <a href="/terms">Terms of Service</a>
-        </p>
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="/privacy">Privacy Policy</a>
+                <a href="/terms">Terms of Service</a>
+            </div>
+            <div class="footer-social">
+                <a href="https://twitter.com/intent/tweet?text=Check%20out%20LargeFileTransfer.org%20-%20Send%20large%20files%20up%20to%2010GB%20for%20free%20with%20end-to-end%20encryption!&url=https://largefiletransfer.org" target="_blank" rel="noopener" aria-label="Share on Twitter">
+                    <i class="fab fa-twitter"></i>
+                </a>
+                <a href="https://www.facebook.com/sharer/sharer.php?u=https://largefiletransfer.org" target="_blank" rel="noopener" aria-label="Share on Facebook">
+                    <i class="fab fa-facebook-f"></i>
+                </a>
+                <a href="https://www.linkedin.com/sharing/share-offsite/?url=https://largefiletransfer.org" target="_blank" rel="noopener" aria-label="Share on LinkedIn">
+                    <i class="fab fa-linkedin-in"></i>
+                </a>
+                <a href="https://reddit.com/submit?url=https://largefiletransfer.org&title=Free%20Large%20File%20Transfer%20-%20Send%20Files%20up%20to%2010GB" target="_blank" rel="noopener" aria-label="Share on Reddit">
+                    <i class="fab fa-reddit-alien"></i>
+                </a>
+                <a href="mailto:?subject=Check%20out%20LargeFileTransfer.org&body=I%20found%20this%20great%20tool%20for%20sending%20large%20files%20securely:%20https://largefiletransfer.org" aria-label="Share via Email">
+                    <i class="fas fa-envelope"></i>
+                </a>
+            </div>
+            <p class="footer-copyright">&copy; 2025 LargeFileTransfer.org. All rights reserved.</p>
+        </div>
     </footer>
+    <script src="/navbar.js"></script>
 </body>
 </html>

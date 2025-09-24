@@ -11,16 +11,11 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="/style.css">
 </head>
 <body>
-    <nav class="navbar">
-        <div class="navbar-brand" role="banner">LargeFileTransfer.org</div>
-        <ul class="navbar-nav">
-            <li><a href="/">Home</a></li>
-            <li><a href="/send">Send File</a></li>
-        </ul>
-    </nav>
+    <div id="navbar-container"></div>
 
     <main class="main-content-wrapper" role="main">
         <section class="container" aria-label="File receiving interface">
@@ -51,6 +46,7 @@
     </main>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+    <script src="/navbar.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.5/socket.io.min.js" integrity="sha512-11t8Q+vY9JlCrr+PveZKTYJq8n7O09Y5X/pk/aMd3vJugSvu4xOunGEUzaADqL3I8cZKE/pBwwCfXzDkRJh2sQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="/shared.js"></script>
     <script>
@@ -126,7 +122,7 @@
             await loadTurnConfig();
 
             // Initialize peer connection and join room
-            debugLog('Joining room:', roomId);
+            
             socket.emit('join-room', roomId);
             setTimeout(() => {
                 setupPeerConnection(false);
@@ -146,7 +142,7 @@
             });
 
             trySendBtn.addEventListener('click', () => {
-                window.location.href = '/send';
+                window.location.href = '/';
             });
         }
 
@@ -198,7 +194,7 @@
             }, CONNECTION_TIMEOUT);
 
             pc.oniceconnectionstatechange = () => {
-                debugLog('ICE connection state:', pc.iceConnectionState);
+        
 
                 switch (pc.iceConnectionState) {
                     case 'connected':
@@ -228,19 +224,21 @@
 
             pc.ondatachannel = event => {
                 dataChannel = event.channel;
+
+                // Ensure consistent binary data handling across browsers
+                dataChannel.binaryType = 'arraybuffer';
+
+
                 dataChannel.onmessage = handleDataChannelMessage;
                 dataChannel.onopen = () => {
-                    debugLog('Data channel open with sender');
                 };
                 dataChannel.onclose = () => {
-                    debugLog('Data channel closed with sender');
                     if (!transferCancelled && connectionState !== 'completed') {
                         showError('Connection closed by sender');
                     }
                 };
                 dataChannel.onerror = (error) => {
-                    debugLog('Data channel error:', error);
-                    showError('Data transfer error occurred');
+                    showError('Data channel error occurred');
                 };
             };
         }
@@ -264,9 +262,9 @@
             if (pc && pc.signalingState === 'have-local-offer') {
                 try {
                     await pc.setRemoteDescription(new RTCSessionDescription(data.sdp));
-                    debugLog('Answer received and processed');
+                   
                 } catch (error) {
-                    debugLog('Error handling answer:', error);
+                    
                     showError('Failed to establish connection');
                 }
             }
@@ -276,7 +274,7 @@
             if (pc) {
                 try {
                     await pc.addIceCandidate(new RTCIceCandidate(data.candidate));
-                    debugLog('ICE candidate added');
+                
                 } catch (error) {
                     debugLog('Error adding ICE candidate:', error);
                 }
@@ -285,7 +283,7 @@
 
 
         function handleFileMeta(metadata) {
-            debugLog('Received file metadata:', metadata);
+           
 
             if (!validateFile({ size: metadata.size, type: metadata.type || '', name: metadata.name })) {
                 cancelTransfer();
@@ -324,6 +322,7 @@
         async function acceptAndSaveFile() {
             downloadBtn.disabled = true;
 
+
             if (!dataChannel || dataChannel.readyState !== 'open') {
                 showError('Connection not ready. Please wait and try again.');
                 downloadBtn.disabled = false;
@@ -333,11 +332,14 @@
             const startTransfer = () => {
                 try {
                     resetProgressTracking();
+
+                    // Reset chunk counters
+                    receivedChunkCount = 0;
+                    expectedChunks = 0;
+
                     dataChannel.send(JSON.stringify({ type: 'start' }));
-                    debugLog('Sent start signal to sender.');
                     document.getElementById('receive-status').textContent = 'Transfer starting...';
                 } catch (error) {
-                    debugLog('Error starting transfer:', error);
                     showError('Failed to start transfer');
                     downloadBtn.disabled = false;
                 }
@@ -372,7 +374,11 @@
             }
         }
 
+        let receivedChunkCount = 0;
+        let expectedChunks = 0;
+
         async function handleDataChannelMessage(event) {
+
             if (transferCancelled || transferCompleting) {
                 debugLog('Transfer cancelled or completing, ignoring data');
                 return;
@@ -383,19 +389,60 @@
                 return;
             }
 
+            if (typeof event.data === 'string') {
+                // This is likely a control message (start signal response)
+                return;
+            }
+
+            // Calculate expected chunks when we receive the first data chunk
+            if (receivedChunkCount === 0 && receivingFile) {
+                expectedChunks = Math.ceil(receivingFile.size / CHUNK_SIZE);
+            }
+
+            // Convert data to ArrayBuffer if needed
+            let dataBuffer;
+            if (event.data instanceof ArrayBuffer) {
+                dataBuffer = event.data;
+            } else if (event.data instanceof Blob) {
+                dataBuffer = await event.data.arrayBuffer();
+            } else if (typeof event.data === 'object' && event.data.constructor.name === 'ArrayBuffer') {
+                dataBuffer = event.data;
+            } else {
+                return;
+            }
+
+            // Validate data integrity
+            if (!dataBuffer || dataBuffer.byteLength === 0) {
+                return;
+            }
+
+            receivedChunkCount++;
+
             try {
                 if (fileWriter) {
-                    if (receivedSize + event.data.byteLength >= receivingFile.size) {
-                        debugLog('Final chunk received, preparing for completion');
+                    if (receivedSize + dataBuffer.byteLength >= receivingFile.size) {
+                        debugLog('Final chunk received, preparing for completion. Total received will be:', receivedSize + dataBuffer.byteLength);
                     }
 
                     try {
-                        await fileWriter.write(event.data);
-                        receivedSize += event.data.byteLength;
+                        // Verify we're not writing more data than expected
+                        if (receivedSize + dataBuffer.byteLength > receivingFile.size) {
+                            // Trim the buffer to exact remaining size
+                            const remainingBytes = receivingFile.size - receivedSize;
+                            if (remainingBytes > 0) {
+                                const trimmedBuffer = dataBuffer.slice(0, remainingBytes);
+                                await fileWriter.write(trimmedBuffer);
+                                receivedSize += trimmedBuffer.byteLength;
+                            }
+                        } else {
+                            await fileWriter.write(dataBuffer);
+                            receivedSize += dataBuffer.byteLength;
+                        }
+
                         updateProgressBar('receive-progress', receivedSize, receivingFile.size);
 
                         if (receivedSize >= receivingFile.size && !transferCompleting) {
-                            debugLog('All data received, initiating finalization');
+                            debugLog('All data received, initiating finalization. Final size:', receivedSize, 'Chunks received:', receivedChunkCount, 'Expected:', expectedChunks);
                             transferCompleting = true;
                             finalizeReceivedFile();
                         }
@@ -405,17 +452,29 @@
                         cancelTransfer();
                     }
                 } else {
-                    if (receiveBuffer.length > 1000) {
-                        showError('File too large for in-memory download. Please use a browser that supports direct file saving.');
+                    if (receiveBuffer.length > 32768) {  // 4GB limit (32768 * 128KB = 4GB)
+                        showError('File too large for in-memory download. Maximum size is 4GB for browsers without direct file saving support.');
                         cancelTransfer();
                         return;
                     }
 
-                    receiveBuffer.push(event.data);
-                    receivedSize += event.data.byteLength;
+                    // Verify we're not storing more data than expected
+                    if (receivedSize + dataBuffer.byteLength > receivingFile.size) {
+                        const remainingBytes = receivingFile.size - receivedSize;
+                        if (remainingBytes > 0) {
+                            const trimmedBuffer = dataBuffer.slice(0, remainingBytes);
+                            receiveBuffer.push(trimmedBuffer);
+                            receivedSize += trimmedBuffer.byteLength;
+                        }
+                    } else {
+                        receiveBuffer.push(dataBuffer);
+                        receivedSize += dataBuffer.byteLength;
+                    }
+
                     updateProgressBar('receive-progress', receivedSize, receivingFile.size);
 
                     if (receivedSize >= receivingFile.size && !transferCompleting) {
+                        debugLog('All data received in memory, initiating finalization. Final size:', receivedSize, 'Chunks received:', receivedChunkCount, 'Expected:', expectedChunks);
                         transferCompleting = true;
                         finalizeReceivedFile();
                     }
@@ -450,8 +509,20 @@
                         document.getElementById('receive-status').style.color = '#28a745';
                     }, 50);
 
+                    // Send confirmation via both Socket.io and data channel
                     socket.emit('transfer-confirmed', { roomId });
-                    debugLog('Confirmation sent to sender');
+
+                    // Send direct confirmation to sender via data channel
+                    if (dataChannel && dataChannel.readyState === 'open') {
+                        try {
+                            dataChannel.send(JSON.stringify({ type: 'completed' }));
+                            debugLog('Direct completion confirmation sent to sender via data channel');
+                        } catch (error) {
+                            debugLog('Error sending completion confirmation via data channel:', error);
+                        }
+                    }
+
+                    debugLog('Confirmation sent to sender via Socket.io');
 
                     downloadBtn.style.display = 'none';
                     cancelBtn.style.display = 'none';
@@ -483,7 +554,19 @@
                     cancelBtn.style.display = 'none';
                     trySendBtn.style.display = 'block';
 
+                    // Send confirmation via both Socket.io and data channel
                     socket.emit('transfer-confirmed', { roomId });
+
+                    // Send direct confirmation to sender via data channel
+                    if (dataChannel && dataChannel.readyState === 'open') {
+                        try {
+                            dataChannel.send(JSON.stringify({ type: 'completed' }));
+                            debugLog('Direct completion confirmation sent to sender via data channel');
+                        } catch (error) {
+                            debugLog('Error sending completion confirmation via data channel:', error);
+                        }
+                    }
+
                     debugLog('Blob download completed, confirmation sent to sender');
                 }
             } catch (error) {
@@ -497,14 +580,34 @@
             // This function is not used in receiver, but kept for compatibility
         }
 
+
     </script>
 
     <footer class="footer-main">
-        <p>&copy; 2025 LargeFileTransfer.org. All rights reserved.</p>
-        <p>
-            <a href="/privacy">Privacy Policy</a> |
-            <a href="/terms">Terms of Service</a>
-        </p>
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="/privacy">Privacy Policy</a>
+                <a href="/terms">Terms of Service</a>
+            </div>
+            <div class="footer-social">
+                <a href="https://twitter.com/intent/tweet?text=Check%20out%20LargeFileTransfer.org%20-%20Send%20large%20files%20up%20to%2010GB%20for%20free%20with%20end-to-end%20encryption!&url=https://largefiletransfer.org" target="_blank" rel="noopener" aria-label="Share on Twitter">
+                    <i class="fab fa-twitter"></i>
+                </a>
+                <a href="https://www.facebook.com/sharer/sharer.php?u=https://largefiletransfer.org" target="_blank" rel="noopener" aria-label="Share on Facebook">
+                    <i class="fab fa-facebook-f"></i>
+                </a>
+                <a href="https://www.linkedin.com/sharing/share-offsite/?url=https://largefiletransfer.org" target="_blank" rel="noopener" aria-label="Share on LinkedIn">
+                    <i class="fab fa-linkedin-in"></i>
+                </a>
+                <a href="https://reddit.com/submit?url=https://largefiletransfer.org&title=Free%20Large%20File%20Transfer%20-%20Send%20Files%20up%20to%2010GB" target="_blank" rel="noopener" aria-label="Share on Reddit">
+                    <i class="fab fa-reddit-alien"></i>
+                </a>
+                <a href="mailto:?subject=Check%20out%20LargeFileTransfer.org&body=I%20found%20this%20great%20tool%20for%20sending%20large%20files%20securely:%20https://largefiletransfer.org" aria-label="Share via Email">
+                    <i class="fas fa-envelope"></i>
+                </a>
+            </div>
+            <p class="footer-copyright">&copy; 2025 LargeFileTransfer.org. All rights reserved.</p>
+        </div>
     </footer>
 </body>
 </html>

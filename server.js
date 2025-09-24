@@ -67,7 +67,7 @@ app.use((req, res, next) => {
 
     res.setHeader(
         'Content-Security-Policy',
-        `default-src 'self'; script-src 'self' https://cdnjs.cloudflare.com 'unsafe-inline'; style-src 'self' 'unsafe-inline'; connect-src ${connectSrc}; img-src 'self' data:;`
+        `default-src 'self'; script-src 'self' https://cdnjs.cloudflare.com 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; connect-src ${connectSrc}; img-src 'self' data:;`
     );
     next();
 });
@@ -80,8 +80,12 @@ app.get('/socket.io/socket.io.js', (req, res) => {
     res.sendFile(require.resolve('socket.io/client-dist/socket.io.js'));
 });
 
-// Redirect root to /send for a better user experience
+// Serve home page for root - includes file transfer functionality
 app.get('/(|/)', (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'));
+});
+
+app.get('/home(|/)', (req, res) => {
     res.sendFile(path.join(__dirname, 'home.html'));
 });
 
@@ -95,11 +99,6 @@ app.get('/privacy(|/)', (req, res) => {
 
 app.get('/terms(|/)', (req, res) => {
     res.sendFile(path.join(__dirname, 'terms.html'));
-});
-
-// Handle sender route
-app.get('/send(|/)', (req, res) => {
-    res.sendFile(path.join(__dirname, 'index.html'));
 });
 
 // Handle receiver route with dedicated receive page
