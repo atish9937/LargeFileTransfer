@@ -1,0 +1,22 @@
+User-agent: *
+
+# Allow public pages
+Allow: /
+Allow: /home
+Allow: /about
+Allow: /privacy
+Allow: /terms
+
+# Disallow receive pages (file transfer links)
+Disallow: /receive/
+
+# Disallow any dynamically generated sharing links
+Disallow: /share/
+Disallow: /download/
+Disallow: /transfer/
+
+# Allow sitemap
+Sitemap: https://largefiletransfer.org/sitemap.xml
+
+# Crawl delay to be respectful
+Crawl-delay: 1
