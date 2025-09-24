@@ -249,7 +249,14 @@ io.on('connection', (socket) => {
 
     socket.on('disconnect', () => {
         console.log(`User disconnected: ${socket.id}`);
-        // In a real app, you might want to notify rooms about the disconnection
+        // Notify other users in all rooms this socket was part of
+        if (socket.rooms) {
+            socket.rooms.forEach(roomId => {
+                if (roomId !== socket.id) { // Skip the socket's own room
+                    socket.to(roomId).emit('user-left', { socketId: socket.id });
+                }
+            });
+        }
     });
 });
 

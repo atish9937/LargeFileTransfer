@@ -1037,8 +1037,8 @@ h1 {
 .subtitle {
     font-size: 1rem;
     color: var(--text-muted);
-    margin-bottom: 2.5rem;
-    font-weight: 500;
+    margin-bottom: 2rem;
+    font-weight: 400;
 }
 
 /* File upload area */

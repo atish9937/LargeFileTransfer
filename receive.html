@@ -92,6 +92,7 @@
         socket.on('ice-candidate', (data) => handleIceCandidate(data, pc));
         socket.on('file-meta', handleFileMeta);
         socket.on('transfer-confirmed', handleTransferConfirmed);
+        socket.on('user-left', handleSenderLeft);
 
         // --- Extract room ID from URL ---
         const path = window.location.pathname;
@@ -205,7 +206,13 @@
                         }
                         break;
                     case 'disconnected':
-                        showError('Connection lost. Attempting to reconnect...', true);
+                        // If transfer was already completed, don't show reconnection error
+                        if (connectionState === 'completed') {
+                            document.getElementById('receive-status').textContent = 'Transfer completed successfully. You can close this page.';
+                            document.getElementById('receive-status').style.color = '#28a745';
+                        } else {
+                            showError('Connection lost. Attempting to reconnect...', true);
+                        }
                         break;
                     case 'failed':
                         showError('Connection failed. Please try again.');
@@ -578,6 +585,27 @@
 
         function handleTransferConfirmed() {
             // This function is not used in receiver, but kept for compatibility
+        }
+
+        function handleSenderLeft(data) {
+            // If transfer was completed, just show a neutral message
+            if (connectionState === 'completed') {
+                document.getElementById('receive-status').textContent = 'Transfer completed successfully. You can close this page.';
+                document.getElementById('receive-status').style.color = '#28a745';
+                return;
+            }
+
+            // If transfer was in progress or not completed
+            if (connectionState === 'connected' && !transferCancelled) {
+                document.getElementById('receive-status').textContent = 'Transfer interrupted - sender disconnected.';
+                document.getElementById('receive-status').style.color = '#dc3545';
+            } else if (connectionState === 'connecting') {
+                document.getElementById('receive-status').textContent = 'Sender left before transfer could begin. This link is no longer valid.';
+                document.getElementById('receive-status').style.color = '#6c757d';
+            }
+
+            // Cleanup connection
+            cleanup();
         }
 
 

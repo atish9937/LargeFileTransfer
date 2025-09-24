@@ -72,7 +72,7 @@
     <section class="container" aria-label="File transfer interface">
         <!-- Initial Screen -->
         <div id="select-screen" role="region" aria-label="File selection">
-            <h1>Send Large Files Free - Up to 10GB File Transfer</h1>
+            <h1>Large Files Transfer Direct P2P Transfer - Up to 10GB Free</h1>
             <p class="subtitle">
                 Need to send files too large for email? Transfer any file up to 10GB instantly with our secure file sharing service.
                 No registration required, no uploads to servers - just direct, encrypted file transfer between your devices.
@@ -679,6 +679,7 @@
             socket.on('ice-candidate', (data) => handleIceCandidate(data, pc));
             socket.on('file-meta', handleFileMeta);
             socket.on('transfer-confirmed', handleTransferConfirmed);
+            socket.on('user-left', handleUserLeft);
 
             // Connect now
             socket.connect();
@@ -802,7 +803,13 @@
                         logIceServerUsage();
                         break;
                     case 'disconnected':
-                        showError('Connection lost. Attempting to reconnect...', true);
+                        // If transfer was already completed, don't show reconnection error
+                        if (connectionState === 'completed') {
+                            document.getElementById('share-status').textContent = 'Transfer completed! Receiver has closed the connection.';
+                            document.getElementById('share-status').style.color = '#28a745';
+                        } else {
+                            showError('Connection lost. Attempting to reconnect...', true);
+                        }
                         break;
                     case 'failed':
                         showError('Connection failed. Please try again.');
@@ -845,7 +852,7 @@
                             showError('Transfer cancelled by recipient');
                             cleanup();
                         } else if (message.type === 'completed') {
-                          
+                            connectionState = 'completed';
                             showSuccess('File transferred successfully!');
 
                             // Update UI to show completion without redirecting
@@ -1049,6 +1056,28 @@
             connectionState = 'completed';
             showSuccess('File sent successfully!');
             sendAnotherBtn.style.display = 'block';
+        }
+
+        function handleUserLeft(data) {
+            // If transfer was completed, show appropriate message
+            if (connectionState === 'completed') {
+                document.getElementById('share-status').textContent = 'Transfer completed! Receiver has closed the connection.';
+                document.getElementById('share-status').style.color = '#28a745';
+                return;
+            }
+
+            // If transfer was in progress or not completed
+            if (connectionState === 'connected' && !transferCancelled) {
+                showError('Receiver disconnected during transfer', false);
+                document.getElementById('share-status').textContent = 'Transfer interrupted - receiver disconnected.';
+            } else if (connectionState === 'connecting') {
+                document.getElementById('share-status').textContent = 'Receiver left before transfer could begin. Share the link again.';
+                document.getElementById('share-status').style.color = '#6c757d';
+                sendAnotherBtn.style.display = 'block';
+            }
+
+            // Cleanup connection
+            cleanup();
         }
 
         // Initialize compatibility check on page load
