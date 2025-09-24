@@ -2,11 +2,7 @@ const CACHE_NAME = 'directdrop-v1';
 const urlsToCache = [
   '/',
   '/style.css',
-  '/shared.js',
-  '/navbar.js',
-  '/manifest.json',
-  '/icon-192.png',
-  '/icon-512.png'
+  '/manifest.json'
 ];
 
 // Install Service Worker

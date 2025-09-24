@@ -392,10 +392,14 @@
                             Notification.requestPermission();
                         }
 
-                        // Register for periodic background sync (if supported)
+                        // Register for periodic background sync after service worker is active
                         if ('periodicSync' in registration) {
-                            registration.periodicSync.register('check-updates', {
-                                minInterval: 24 * 60 * 60 * 1000, // 24 hours
+                            navigator.serviceWorker.ready.then(function(reg) {
+                                return reg.periodicSync.register('check-updates', {
+                                    minInterval: 24 * 60 * 60 * 1000, // 24 hours
+                                });
+                            }).catch(function(error) {
+                                console.log('Periodic sync registration failed:', error);
                             });
                         }
                     })
