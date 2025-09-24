@@ -1,3 +1,14 @@
+/* PWA Specific Styles - Hide elements when running as installed app */
+@media (display-mode: standalone) {
+    h1 {
+        display: none !important;
+    }
+
+    .subtitle {
+        display: none !important;
+    }
+}
+
 /* Modern CSS Reset and Base Styles */
 * {
     box-sizing: border-box;

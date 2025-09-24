@@ -7,6 +7,15 @@
     <link rel="canonical" href="https://largefiletransfer.org/">
     <meta name="theme-color" content="#667eea">
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+
+    <!-- PWA Meta Tags -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="DirectDrop">
+    <link rel="apple-touch-icon" href="/icon-192.png">
+    <meta name="msapplication-TileImage" content="/icon-192.png">
+    <meta name="msapplication-TileColor" content="#667eea">
     <link rel="icon" type="image/png" sizes="32x32" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8cmVjdCB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHJ4PSI4IiBmaWxsPSJ1cmwoI2dyYWRpZW50KSIvPgogIDxkZWZzPgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkaWVudCIgeDE9IjAlIiB5MT0iMCUiIHgyPSIxMDAlIiB5Mj0iMTAwJSI+CiAgICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0eWxlPSJzdG9wLWNvbG9yOiM2NjdlZWE7c3RvcC1vcGFjaXR5OjEiIC8+CiAgICAgIDxzdG9wIG9mZnNldD0iMTAwJSIgc3R5bGU9InN0b3AtY29sb3I6IzlmN2FlYTtzdG9wLW9wYWNpdHk6MSIgLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgPC9kZWZzPgoKICA8IS0tIEZpbGUgdHJhbnNmZXIgaWNvbiAtLT4KICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSg2LCA2KSI+CiAgICA8IS0tIEZpcnN0IGRldmljZSAtLT4KICAgIDxyZWN0IHg9IjAiIHk9IjQiIHdpZHRoPSI4IiBoZWlnaHQ9IjEyIiByeD0iMS41IiBmaWxsPSJ3aGl0ZSIgb3BhY2l0eT0iMC45Ii8+CiAgICA8cmVjdCB4PSIxIiB5PSI1IiB3aWR0aD0iNiIgaGVpZ2h0PSI4IiByeD0iMC41IiBmaWxsPSIjNjY3ZWVhIiBvcGFjaXR5PSIwLjMiLz4KCiAgICA8IS0tIFNlY29uZCBkZXZpY2UgLS0+CiAgICA8cmVjdCB4PSIxMiIgeT0iNCIgd2lkdGg9IjgiIGhlaWdodD0iMTIiIHJ4PSIxLjUiIGZpbGw9IndoaXRlIiBvcGFjaXR5PSIwLjkiLz4KICAgIDxyZWN0IHg9IjEzIiB5PSI1IiB3aWR0aD0iNiIgaGVpZ2h0PSI4IiByeD0iMC41IiBmaWxsPSIjNjY3ZWVhIiBvcGFjaXR5PSIwLjMiLz4KCiAgICA8IS0tIFRyYW5zZmVyIGFycm93IC0tPgogICAgPHBhdGggZD0iTTguNSAxMCBMMTEuNSAxMCBNMTAgOC41IEwxMS41IDEwIEwxMCAxMS41IiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjEuNSIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+CiAgPC9nPgo8L3N2Zz4K">
     <title>Large File Transfer | Send Files Up to 10GB Free | LargeFileTransfer.org</title>
     <meta name="description" content="LargeFileTransfer.org - Send large files up to 10GB for free. Fast, secure peer-to-peer file transfer with end-to-end encryption. No registration, no file size limits, no uploads to servers.">
@@ -370,6 +379,20 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.5/socket.io.min.js" integrity="sha512-11t8Q+vY9JlCrr+PveZKTYJq8n7O09Y5X/pk/aMd3vJugSvu4xOunGEUzaADqL3I8cZKE/pBwwCfXzDkRJh2sQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="/shared.js"></script>
+    <script>
+        // Register Service Worker for PWA functionality
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(function(registration) {
+                        console.log('ServiceWorker registration successful');
+                    })
+                    .catch(function(error) {
+                        console.log('ServiceWorker registration failed: ', error);
+                    });
+            });
+        }
+    </script>
     <script>
         // Test timeout formatting on page load
         if (DEBUG_MODE) {

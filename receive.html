@@ -6,6 +6,15 @@
     <meta name="robots" content="noindex, nofollow">
     <meta name="theme-color" content="#667eea">
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+
+    <!-- PWA Meta Tags -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="DirectDrop">
+    <link rel="apple-touch-icon" href="/icon-192.png">
+    <meta name="msapplication-TileImage" content="/icon-192.png">
+    <meta name="msapplication-TileColor" content="#667eea">
     <title>Receive File | Large File Transfer</title>
     <meta name="description" content="Secure file receiving page - Download your shared file with end-to-end encryption.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -49,6 +58,20 @@
     <script src="/navbar.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.5/socket.io.min.js" integrity="sha512-11t8Q+vY9JlCrr+PveZKTYJq8n7O09Y5X/pk/aMd3vJugSvu4xOunGEUzaADqL3I8cZKE/pBwwCfXzDkRJh2sQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="/shared.js"></script>
+    <script>
+        // Register Service Worker for PWA functionality
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(function(registration) {
+                        console.log('ServiceWorker registration successful');
+                    })
+                    .catch(function(error) {
+                        console.log('ServiceWorker registration failed: ', error);
+                    });
+            });
+        }
+    </script>
     <script>
         // Receiver-specific timeout configuration
         const CONNECTION_TIMEOUT = 5 * 60 * 1000; // 5 minutes
