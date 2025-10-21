@@ -6,7 +6,7 @@ function createNavbar() {
         <nav class="navbar">
             <div class="navbar-left">
                 <a href="/" class="navbar-brand" role="banner">
-                    <img src="/large-file-transfer.png" alt="LargeFileTransfer.org" class="navbar-logo">
+                    <img src="/large-file-transfer.png" alt="LargeFileTransfer.org" class="navbar-logo" width="200" height="40">
                 </a>
             </div>
             <div class="navbar-right">

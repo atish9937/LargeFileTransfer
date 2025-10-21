@@ -34,10 +34,6 @@
     <meta property="twitter:title" content="Large File Transfer | Send Files Up to 10GB Free">
     <meta property="twitter:description" content="LargeFileTransfer.org - Send large files up to 10GB for free with end-to-end encryption. No registration required.">
     <meta property="twitter:image" content="https://largefiletransfer.org/secure-large-file-transfer-peer-to-peer.jpg">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="/style.css">
 
     <!-- Structured Data for SEO -->
@@ -76,9 +72,9 @@
 <body>
     <div id="navbar-container"></div>
 
-    <main class="main-content-wrapper" role="main">
+    <div style="padding: 50px; display: flex; flex-direction: column; align-items: center; min-height: calc(100vh - 200px);" role="main">
 
-    <section class="container" aria-label="File transfer interface">
+    <section class="container" style="min-height: 500px;" aria-label="File transfer interface">
         <!-- Initial Screen -->
         <div id="select-screen" role="region" aria-label="File selection">
             <h1>Large Files Transfer Direct P2P Transfer - Up to 10GB Free</h1>
@@ -112,7 +108,7 @@
                 <button class="btn btn-small" id="copy-link-btn">Copy Link</button>
                 <button class="btn btn-small" id="share-btn">Share...</button>
             </div>
-            <canvas id="qr-code"></canvas>
+            <canvas id="qr-code" width="150" height="150"></canvas>
             <p><strong>Status:</strong> <span id="share-status">Waiting for recipient...</span></p>
             <div class="progress-bar" id="share-progress-bar">
                 <div class="progress-bar-inner" id="share-progress"></div>
@@ -144,7 +140,7 @@
             Our peer-to-peer technology creates a direct connection between your devices, making file transfers up to 3x faster than traditional cloud services.
             No more waiting for uploads or dealing with "file too large" errors.
             </p>
-            <img src="/secure-large-file-transfer-peer-to-peer.jpg" alt="Large File Transfer - Peer to Peer File Sharing" style="width:100%; max-width:600px; border-radius:16px; box-shadow:0 4px 16px rgba(0,0,0,0.1); margin: 20px auto; display:block;">
+            <img src="/secure-large-file-transfer-peer-to-peer.jpg" alt="Large File Transfer - Peer to Peer File Sharing" width="600" height="400" style="width:100%; max-width:600px; height:auto; border-radius:16px; box-shadow:0 4px 16px rgba(0,0,0,0.1); margin: 20px auto; display:block;">
             <div class="advantages-container">
                 <div class="advantage-item">
                     <div class="advantage-icon">⚡</div>
@@ -1386,19 +1382,19 @@
             </div>
             <div class="footer-social">
                 <a href="https://twitter.com/intent/tweet?text=Check%20out%20LargeFileTransfer.org%20-%20Send%20large%20files%20up%20to%2010GB%20for%20free%20with%20end-to-end%20encryption!&url=https://largefiletransfer.org" target="_blank" rel="noopener" aria-label="Share on Twitter">
-                    <i class="fab fa-twitter"></i>
+                    𝕏
                 </a>
                 <a href="https://www.facebook.com/sharer/sharer.php?u=https://largefiletransfer.org" target="_blank" rel="noopener" aria-label="Share on Facebook">
-                    <i class="fab fa-facebook-f"></i>
+                    f
                 </a>
                 <a href="https://www.linkedin.com/sharing/share-offsite/?url=https://largefiletransfer.org" target="_blank" rel="noopener" aria-label="Share on LinkedIn">
-                    <i class="fab fa-linkedin-in"></i>
+                    in
                 </a>
                 <a href="https://reddit.com/submit?url=https://largefiletransfer.org&title=Free%20Large%20File%20Transfer%20-%20Send%20Files%20up%20to%2010GB" target="_blank" rel="noopener" aria-label="Share on Reddit">
-                    <i class="fab fa-reddit-alien"></i>
+                    ●
                 </a>
                 <a href="mailto:?subject=Check%20out%20LargeFileTransfer.org&body=I%20found%20this%20great%20tool%20for%20sending%20large%20files%20securely:%20https://largefiletransfer.org" aria-label="Share via Email">
-                    <i class="fas fa-envelope"></i>
+                    ✉
                 </a>
             </div>
             <p class="footer-copyright">&copy; 2025 LargeFileTransfer.org. All rights reserved.</p>
