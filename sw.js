@@ -1,12 +1,15 @@
-const CACHE_NAME = 'directdrop-v1';
+const CACHE_NAME = 'directdrop-v2'; // Updated version to force cache refresh
 const urlsToCache = [
-  '/',
   '/style.css',
   '/manifest.json'
+  // Don't cache HTML/JS files - always fetch fresh from network
 ];
 
 // Install Service Worker
 self.addEventListener('install', (event) => {
+  // Skip waiting to activate new service worker immediately
+  self.skipWaiting();
+
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then((cache) => {
@@ -16,20 +19,37 @@ self.addEventListener('install', (event) => {
   );
 });
 
-// Fetch event - serve from cache when offline
+// Fetch event - network-first for HTML/JS, cache-first for CSS/images
 self.addEventListener('fetch', (event) => {
-  event.respondWith(
-    caches.match(event.request)
-      .then((response) => {
-        // Return cached version or fetch from network
-        return response || fetch(event.request);
-      }
-    )
-  );
+  const url = new URL(event.request.url);
+
+  // Network-first strategy for HTML and JavaScript files
+  if (url.pathname.match(/\.(html|js)$/) || url.pathname === '/' || url.pathname.startsWith('/receive/')) {
+    event.respondWith(
+      fetch(event.request)
+        .then((response) => {
+          // Don't cache HTML/JS files
+          return response;
+        })
+        .catch(() => {
+          // If network fails, try cache (offline fallback)
+          return caches.match(event.request);
+        })
+    );
+  } else {
+    // Cache-first for other resources (CSS, images, etc.)
+    event.respondWith(
+      caches.match(event.request)
+        .then((response) => {
+          return response || fetch(event.request);
+        })
+    );
+  }
 });
 
 // Activate event - clean up old caches
 self.addEventListener('activate', (event) => {
+  // Take control of all pages immediately
   event.waitUntil(
     caches.keys().then((cacheNames) => {
       return Promise.all(
@@ -40,6 +60,8 @@ self.addEventListener('activate', (event) => {
           }
         })
       );
+    }).then(() => {
+      return self.clients.claim();
     })
   );
 });

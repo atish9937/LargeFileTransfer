@@ -46,6 +46,17 @@ const io = new Server(server, {
 const PORT = process.env.PORT || 3000;
 
 // Add CORS middleware specifically for Socket.io endpoints
+// Disable caching for HTML/JS/CSS files in development
+app.use((req, res, next) => {
+    // Don't cache HTML, JS, CSS files
+    if (req.path.match(/\.(html|js|css)$/)) {
+        res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+        res.setHeader('Pragma', 'no-cache');
+        res.setHeader('Expires', '0');
+    }
+    next();
+});
+
 app.use('/socket.io/*', (req, res, next) => {
     res.header('Access-Control-Allow-Origin', 'https://largefiletransfer.org');
     res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');

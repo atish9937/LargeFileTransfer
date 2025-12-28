@@ -128,6 +128,11 @@ function validateFile(file) {
         return false;
     }
 
+    if (file.size === 0) {
+        showError('File is empty (0 bytes)');
+        return false;
+    }
+
     if (file.size > MAX_FILE_SIZE) {
         showError(`File too large. Maximum size is ${(MAX_FILE_SIZE / (1024*1024*1024)).toFixed(1)}GB`);
         return false;
@@ -138,6 +143,7 @@ function validateFile(file) {
         return false;
     }
 
+    console.log('File validated:', file.name, file.size, 'bytes, type:', file.type);
     return true;
 }
 
@@ -146,54 +152,69 @@ function validateFile(file) {
 let iceCandidateQueue = [];
 
 async function handleOffer(data, pc, socket, roomId) {
-    if (roomId && pc && pc.signalingState === 'stable') {
-        try {
-            await pc.setRemoteDescription(new RTCSessionDescription(data.sdp));
-            const answer = await pc.createAnswer();
-            await pc.setLocalDescription(answer);
-            socket.emit('answer', { roomId, sdp: pc.localDescription });
-            
+    if (!roomId || !pc) {
+        return;
+    }
 
-            // Process any queued ICE candidates
-            await processQueuedIceCandidates(pc);
-        } catch (error) {
-       
-            showError('Failed to establish connection');
-        }
+    if (pc.signalingState !== 'stable') {
+        return;
+    }
+
+    try {
+        await pc.setRemoteDescription(new RTCSessionDescription(data.sdp));
+        const answer = await pc.createAnswer();
+        await pc.setLocalDescription(answer);
+        socket.emit('answer', { roomId, sdp: pc.localDescription });
+
+        // Process any queued ICE candidates
+        await processQueuedIceCandidates(pc);
+    } catch (error) {
+        console.error('Connection setup failed');
+        showError('Failed to establish connection');
     }
 }
 
 async function handleAnswer(data, pc) {
-    if (pc && pc.signalingState === 'have-local-offer') {
-        try {
-            await pc.setRemoteDescription(new RTCSessionDescription(data.sdp));
-        
+    if (!pc) {
+        return;
+    }
 
-            // Process any queued ICE candidates
-            await processQueuedIceCandidates(pc);
-        } catch (error) {
-        
-            showError('Failed to establish connection');
-        }
+    if (pc.signalingState !== 'have-local-offer') {
+        return;
+    }
+
+    try {
+        await pc.setRemoteDescription(new RTCSessionDescription(data.sdp));
+
+        // Process any queued ICE candidates
+        await processQueuedIceCandidates(pc);
+    } catch (error) {
+        console.error('Connection setup failed');
+        showError('Failed to establish connection');
     }
 }
 
 async function handleIceCandidate(data, pc) {
-    if (pc) {
-        // Check if remote description is set
-        if (pc.remoteDescription && pc.remoteDescription.type) {
-            try {
-                await pc.addIceCandidate(new RTCIceCandidate(data.candidate));
-                if (DEBUG_MODE) debugLog('ICE candidate added immediately');
-            } catch (error) {
-                debugLog('Error adding ICE candidate:', error);
-                // ICE candidate errors are usually non-fatal, so don't show user error
-            }
-        } else {
-            // Queue the candidate for later processing
+    if (!pc) {
+        return;
+    }
+
+    // More robust check for remote description
+    const hasRemoteDescription = pc.remoteDescription &&
+                                  pc.remoteDescription.type &&
+                                  (pc.signalingState === 'have-remote-offer' ||
+                                   pc.signalingState === 'stable');
+
+    if (hasRemoteDescription) {
+        try {
+            await pc.addIceCandidate(new RTCIceCandidate(data.candidate));
+        } catch (error) {
+            // Queue it if it failed
             iceCandidateQueue.push(data.candidate);
-            if (DEBUG_MODE) debugLog('ICE candidate queued (remote description not yet set)');
         }
+    } else {
+        // Queue the candidate for later processing
+        iceCandidateQueue.push(data.candidate);
     }
 }
 
@@ -203,9 +224,8 @@ async function processQueuedIceCandidates(pc) {
         const candidate = iceCandidateQueue.shift();
         try {
             await pc.addIceCandidate(new RTCIceCandidate(candidate));
-            if (DEBUG_MODE) debugLog('Queued ICE candidate processed');
         } catch (error) {
-            debugLog('Error processing queued ICE candidate:', error);
+            // Silently handle errors
         }
     }
 }
@@ -213,7 +233,6 @@ async function processQueuedIceCandidates(pc) {
 // Clear ICE candidate queue (call when creating new peer connection)
 function clearIceCandidateQueue() {
     iceCandidateQueue = [];
-    
 }
 
 // ===== PROGRESS TRACKING =====
