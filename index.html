@@ -102,9 +102,38 @@
                 <h3 style="margin-bottom: 15px;">Selected Files (<span id="file-count">0</span>)</h3>
                 <ul id="file-list" style="max-height: 200px; overflow-y: auto; list-style: none; padding: 0; margin: 15px 0;"></ul>
                 <p style="margin: 15px 0;"><strong>Total size:</strong> <span id="total-size">0 MB</span></p>
-                <button class="btn" id="confirm-files-btn">Confirm & Send</button>
-                <button class="btn" id="cancel-files-btn" style="background-color: #6c757d; margin-left: 10px;">Cancel</button>
+                <button class="btn" id="cancel-files-btn" style="background-color: #6c757d;">Cancel Selection</button>
             </div>
+
+            <!-- Password Protection Section -->
+            <div id="password-section" style="display: none; margin-top: 20px; padding: 20px; background: rgba(255,255,255,0.05); border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);">
+                <div style="display: flex; align-items: center; margin-bottom: 10px;">
+                    <h3 style="margin: 0; flex: 1;">🔒 Password Protection (Optional)</h3>
+                    <label style="display: flex; align-items: center; cursor: pointer;">
+                        <input type="checkbox" id="enable-password" style="margin-right: 8px; width: 18px; height: 18px; cursor: pointer;">
+                        <span style="font-size: 0.9em;">Enable</span>
+                    </label>
+                </div>
+                <div id="password-input-container" style="display: none;">
+                    <p style="font-size: 0.9em; color: #ccc; margin-bottom: 15px;">
+                        Add a password to prevent unauthorized access. <strong>Share the password separately</strong> with your recipient (e.g., via phone or text).
+                    </p>
+                    <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 10px;">
+                        <input
+                            type="password"
+                            id="transfer-password"
+                            placeholder="Enter password (4-50 characters)"
+                            style="flex: 1; padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.9); color: #333; font-size: 1em;"
+                            maxlength="50"
+                        />
+                        <button id="toggle-password-visibility" class="btn btn-small" style="padding: 12px 20px; white-space: nowrap;">
+                            👁️ Show
+                        </button>
+                    </div>
+                    <p id="password-strength" style="font-size: 0.85em; color: #999; margin: 0;"></p>
+                </div>
+            </div>
+
             <div class="footer">
                 <div class="security-badge">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"></path></svg>
@@ -129,6 +158,37 @@
                 <div class="progress-bar-inner" id="share-progress"></div>
             </div>
             <button class="btn" id="send-another-btn" style="display: none; margin-top: 20px;">Send Another File</button>
+        </div>
+
+        <!-- Password Prompt Modal (Receiver) -->
+        <div id="password-prompt" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 9999;" role="dialog" aria-label="Password required">
+            <div style="background: rgba(0,0,0,0.9); position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; align-items: center; justify-content: center;">
+                <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 40px; border-radius: 16px; max-width: 500px; width: 90%; box-shadow: 0 20px 60px rgba(0,0,0,0.5);">
+                    <h2 style="margin-bottom: 15px; text-align: center;">🔒 Password Protected Transfer</h2>
+                    <p style="margin-bottom: 25px; color: rgba(255,255,255,0.9); text-align: center;">
+                        This file transfer is password protected. Enter the password to continue.
+                    </p>
+                    <input
+                        type="password"
+                        id="receiver-password-input"
+                        placeholder="Enter password"
+                        style="width: 100%; padding: 15px; border-radius: 8px; border: none; font-size: 1em; margin-bottom: 10px; box-sizing: border-box;"
+                        autofocus
+                    />
+                    <p id="password-error" style="color: #ff6b6b; margin-bottom: 15px; display: none; font-size: 0.9em; text-align: center;"></p>
+                    <div style="display: flex; gap: 10px;">
+                        <button id="submit-password-btn" class="btn" style="flex: 1; padding: 15px;">
+                            Unlock Transfer
+                        </button>
+                        <button id="cancel-password-btn" class="btn" style="flex: 1; padding: 15px; background-color: #6c757d;">
+                            Cancel
+                        </button>
+                    </div>
+                    <p style="font-size: 0.85em; color: rgba(255,255,255,0.7); margin-top: 15px; text-align: center;">
+                        Ask the sender for the password if you don't have it.
+                    </p>
+                </div>
+            </div>
         </div>
 
         <!-- Receive Screen -->
@@ -556,20 +616,124 @@
 
             // --- Receiver Logic ---
             selectScreen.style.display = 'none';
-            receiveScreen.style.display = 'block';
+            receiveScreen.style.display = 'none'; // Hide initially
             showCompatibilityWarnings();
 
-            if ('showSaveFilePicker' in window) {
-                downloadBtn.textContent = 'Accept & Save';
+            // Wrap in async IIFE to use await
+            (async () => {
+                // Initialize socket connection and wait for it
+                await initializeSocket();
+
+                // Setup event listeners BEFORE emitting check-room
+                // Handle room info response
+                socket.on('room-info', (data) => {
+                    console.log('🔐 [RECEIVER] Received room-info:', {
+                        exists: data.exists,
+                        isProtected: data.isProtected,
+                        hasUsers: data.hasUsers,
+                        fullData: data
+                    });
+
+                    if (data.exists && data.isProtected) {
+                        console.log('🔐 [RECEIVER] Room is protected, showing password prompt');
+                        // Show password prompt
+                        document.getElementById('password-prompt').style.display = 'block';
+                        setupPasswordPrompt();
+                    } else if (data.exists) {
+                        console.log('🔐 [RECEIVER] Room exists but no password required, proceeding');
+                        // No password required, proceed normally
+                        proceedToReceive();
+                    } else {
+                        console.log('🔐 [RECEIVER] Room does not exist');
+                        // Room doesn't exist
+                        receiveScreen.style.display = 'block';
+                        showError('Transfer link is invalid or expired');
+                    }
+                });
+
+                socket.on('room-not-found', () => {
+                    receiveScreen.style.display = 'block';
+                    showError('Transfer link is invalid or expired');
+                });
+
+                // Now check if room requires password (after socket is connected and listeners are set up)
+                socket.emit('check-room', { roomId });
+            })();
+
+            // Setup password prompt handlers
+            function setupPasswordPrompt() {
+                const passwordInput = document.getElementById('receiver-password-input');
+                const submitBtn = document.getElementById('submit-password-btn');
+                const cancelBtn = document.getElementById('cancel-password-btn');
+                const errorMsg = document.getElementById('password-error');
+
+                // Submit password
+                const submitHandler = async () => {
+                    const password = passwordInput.value.trim();
+
+                    if (!password) {
+                        errorMsg.textContent = 'Please enter a password';
+                        errorMsg.style.display = 'block';
+                        return;
+                    }
+
+                    submitBtn.disabled = true;
+                    submitBtn.textContent = 'Verifying...';
+                    errorMsg.style.display = 'none';
+
+                    // Hash password and verify
+                    const passwordHash = await hashPassword(password);
+
+                    socket.emit('verify-password', { roomId, passwordHash });
+                };
+
+                submitBtn.addEventListener('click', submitHandler);
+
+                // Handle password verification result
+                socket.on('password-verified', (data) => {
+                    if (data.valid) {
+                        // Password correct - proceed to receive
+                        document.getElementById('password-prompt').style.display = 'none';
+                        proceedToReceive();
+                    } else {
+                        // Password incorrect
+                        errorMsg.textContent = 'Incorrect password. Please try again.';
+                        errorMsg.style.display = 'block';
+                        submitBtn.disabled = false;
+                        submitBtn.textContent = 'Unlock Transfer';
+                        passwordInput.value = '';
+                        passwordInput.focus();
+                    }
+                });
+
+                // Cancel button
+                cancelBtn.addEventListener('click', () => {
+                    window.location.href = '/';
+                });
+
+                // Enter key to submit
+                passwordInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        submitHandler();
+                    }
+                });
             }
 
-            // Initialize socket connection and join room
-            initializeSocket();
-            socket.emit('join-room', roomId);
-            // Set up peer connection after joining room to prevent race conditions
-            setTimeout(() => {
-                setupPeerConnection(false);
-            }, 100);
+            // Proceed to receive screen after password verification (or if no password)
+            function proceedToReceive() {
+                receiveScreen.style.display = 'block';
+
+                if ('showSaveFilePicker' in window) {
+                    downloadBtn.textContent = 'Accept & Save';
+                }
+
+                // Join room and setup peer connection
+                socket.emit('join-room', { roomId });
+
+                setTimeout(() => {
+                    setupPeerConnection(false);
+                }, 100);
+            }
 
             const cancelBtn = document.getElementById('cancel-btn');
             cancelBtn.addEventListener('click', () => {
@@ -634,6 +798,34 @@
                 }
             });
 
+            // --- Password Protection Event Listeners ---
+            const enablePasswordCheckbox = document.getElementById('enable-password');
+            const passwordInputContainer = document.getElementById('password-input-container');
+            const togglePasswordBtn = document.getElementById('toggle-password-visibility');
+            const transferPasswordInput = document.getElementById('transfer-password');
+
+            // Enable/disable password input
+            enablePasswordCheckbox.addEventListener('change', (e) => {
+                if (e.target.checked) {
+                    passwordInputContainer.style.display = 'block';
+                    transferPasswordInput.focus();
+                } else {
+                    passwordInputContainer.style.display = 'none';
+                    transferPasswordInput.value = '';
+                }
+            });
+
+            // Toggle password visibility
+            togglePasswordBtn.addEventListener('click', () => {
+                if (transferPasswordInput.type === 'password') {
+                    transferPasswordInput.type = 'text';
+                    togglePasswordBtn.textContent = '🔒 Hide';
+                } else {
+                    transferPasswordInput.type = 'password';
+                    togglePasswordBtn.textContent = '👁️ Show';
+                }
+            });
+
             // --- Share Button Logic ---
             const copyLinkBtn = document.getElementById('copy-link-btn');
             const shareBtn = document.getElementById('share-btn');
@@ -681,13 +873,7 @@
                 return;
             }
 
-            // Single file - use existing flow
-            if (filesArray.length === 1 && !isFolder) {
-                handleFile(filesArray[0]);
-                return;
-            }
-
-            // Multiple files - show preview and compress
+            // Show preview for ALL files (single or multiple)
             showFilePreview(filesArray, isFolder);
         }
 
@@ -719,23 +905,50 @@
             dropArea.style.display = 'none';
             filePreview.style.display = 'block';
 
-            // Handle confirm
-            document.getElementById('confirm-files-btn').onclick = () => {
-                compressAndSend(files, isFolder);
-            };
-
+            // Handle cancel
             document.getElementById('cancel-files-btn').onclick = () => {
                 filePreview.style.display = 'none';
+                document.getElementById('password-section').style.display = 'none';
                 dropArea.style.display = 'block';
                 fileInput.value = '';
                 const folderInputElement = document.getElementById('folder-input');
                 if (folderInputElement) folderInputElement.value = '';
             };
+
+            // Show password section with Generate Link button
+            const passwordSection = document.getElementById('password-section');
+            passwordSection.style.display = 'block';
+
+            // Remove any existing generate button
+            const existingBtn = document.getElementById('generate-link-btn');
+            if (existingBtn) existingBtn.remove();
+
+            // Add "Generate Link" button
+            const generateBtn = document.createElement('button');
+            generateBtn.id = 'generate-link-btn';
+            generateBtn.className = 'btn';
+            generateBtn.style.cssText = 'margin-top: 20px; width: 100%; padding: 15px; font-size: 1.1em;';
+            generateBtn.textContent = 'Generate Share Link';
+
+            // Handle different scenarios
+            generateBtn.onclick = async () => {
+                if (files.length === 1 && !isFolder) {
+                    // Single file - set fileToSend and proceed directly
+                    fileToSend = files[0];
+                    await proceedWithTransfer();
+                } else {
+                    // Multiple files or folder - compress first
+                    await compressAndSend(files, isFolder);
+                }
+            };
+
+            passwordSection.appendChild(generateBtn);
         }
 
         async function compressAndSend(files, isFolder) {
-            // Hide preview, keep drop area hidden
+            // Hide preview and password section during compression
             document.getElementById('file-preview').style.display = 'none';
+            document.getElementById('password-section').style.display = 'none';
 
             const statusMsg = document.createElement('div');
             statusMsg.id = 'compression-status';
@@ -797,7 +1010,7 @@
 
                 const zipFile = new File([zipBlob], zipFileName, { type: 'application/zip' });
 
-                // Remove status message before transitioning
+                // Remove status message
                 statusMsg.remove();
 
                 // Clear file inputs
@@ -805,8 +1018,9 @@
                 const folderInputElement = document.getElementById('folder-input');
                 if (folderInputElement) folderInputElement.value = '';
 
-                // Use existing single-file flow
-                await handleFile(zipFile);
+                // Set fileToSend and proceed with transfer
+                fileToSend = zipFile;
+                await proceedWithTransfer();
 
             } catch (error) {
                 console.error('Compression error:', error);
@@ -814,21 +1028,66 @@
                 showError('Failed to compress files: ' + error.message);
                 // Show drop area again on error
                 dropArea.style.display = 'block';
+                document.getElementById('file-preview').style.display = 'none';
+                document.getElementById('password-section').style.display = 'none';
             }
         }
 
-        async function handleFile(file) {
-            if (!validateFile(file)) {
+        async function proceedWithTransfer() {
+            // Get password if enabled
+            const passwordEnabled = document.getElementById('enable-password').checked;
+            const password = document.getElementById('transfer-password').value.trim();
+            let passwordHash = null;
+
+            console.log('🔐 [SENDER] Password enabled:', passwordEnabled);
+            console.log('🔐 [SENDER] Password length:', password ? password.length : 0);
+
+            if (passwordEnabled && password && password.length >= 4) {
+                passwordHash = await hashPassword(password);
+                console.log('🔐 [SENDER] Password hash generated:', passwordHash ? 'YES (length: ' + passwordHash.length + ')' : 'FAILED');
+                if (!passwordHash) {
+                    showError('Failed to process password. Please try again.');
+                    return;
+                }
+            } else if (passwordEnabled && (!password || password.length < 4)) {
+                showError('Password must be at least 4 characters long.');
                 return;
             }
 
-            fileToSend = file;
             roomId = generateSecureRoomId();
             const url = `${window.location.origin}/receive/${roomId}`;
 
             shareLink.value = url;
             new QRious({ element: qrCanvas, value: url, size: 150 });
 
+            // Load TURN configuration before setting up peer connection
+            await loadTurnConfig();
+
+            // Initialize socket connection for sender and wait for connection
+            await initializeSocket();
+
+            // Send room creation with password hash
+            const joinRoomData = {
+                roomId,
+                passwordHash,
+                isProtected: !!passwordHash
+            };
+            console.log('🔐 [SENDER] Emitting join-room with data:', {
+                roomId,
+                hasPasswordHash: !!passwordHash,
+                isProtected: !!passwordHash,
+                passwordHashPreview: passwordHash ? passwordHash.substring(0, 10) + '...' : null
+            });
+            socket.emit('join-room', joinRoomData);
+
+            // Wait for server to process the room creation
+            // This prevents race condition where receiver checks before room exists
+            console.log('Creating room on server...', roomId);
+            await new Promise(resolve => setTimeout(resolve, 500)); // Wait 500ms for server processing
+            console.log('✓ Room creation request sent, proceeding...');
+
+            // IMPORTANT: Show share screen ONLY after room is confirmed created on server
+            // This prevents race condition where receiver checks before room exists
             selectScreen.style.display = 'none';
             shareScreen.style.display = 'block';
 
@@ -836,12 +1095,6 @@
             document.getElementById('share-status').textContent = `Waiting for recipient... (expires in ${formatTimeout(WAITING_FOR_RECEIVER_TIMEOUT)})`;
             document.getElementById('share-status').style.color = '';
 
-            // Load TURN configuration before setting up peer connection
-            await loadTurnConfig();
-
-            // Initialize socket connection for sender
-            initializeSocket();
-            socket.emit('join-room', roomId);
             setupPeerConnection(true);
 
             // Start waiting timeout - if no receiver joins within 5 minutes
@@ -928,54 +1181,56 @@
 
         // Initialize Socket.io connection only when needed
         function initializeSocket() {
-            if (socket) return socket; // Already initialized
+            if (socket) return Promise.resolve(socket); // Already initialized
 
-            socket = io(SIGNALING_SERVER_URL, {
-                // Only connect when explicitly needed
-                autoConnect: false,
-                // Temporarily use polling-only to avoid WebSocket issues
-                transports: ['polling'],
-                // Disable upgrade for now
-                upgrade: false,
-                // Connection settings for production
-                timeout: 10000,
-                reconnection: true,
-                reconnectionAttempts: 5,
-                reconnectionDelay: 2000,
-                // Production-specific settings
-                forceNew: false,
-                // Ping settings to match server
-                pingTimeout: 60000,
-                pingInterval: 25000
+            return new Promise((resolve, reject) => {
+                socket = io(SIGNALING_SERVER_URL, {
+                    // Only connect when explicitly needed
+                    autoConnect: false,
+                    // Temporarily use polling-only to avoid WebSocket issues
+                    transports: ['polling'],
+                    // Disable upgrade for now
+                    upgrade: false,
+                    // Connection settings for production
+                    timeout: 10000,
+                    reconnection: true,
+                    reconnectionAttempts: 5,
+                    reconnectionDelay: 2000,
+                    // Production-specific settings
+                    forceNew: false,
+                    // Ping settings to match server
+                    pingTimeout: 60000,
+                    pingInterval: 25000
+                });
+
+                // Set up event handlers
+                socket.on('connect', () => {
+                    debugLog('Connected to signaling server');
+                    resolve(socket);
+                });
+
+                socket.on('disconnect', () => {
+
+                    showError('Lost connection to signaling server', true);
+                });
+
+                socket.on('connect_error', (error) => {
+
+                    showError('Could not connect to signaling server');
+                    reject(error);
+                });
+
+                socket.on('user-joined', createOffer);
+                socket.on('offer', (data) => handleOffer(data, pc, socket, roomId));
+                socket.on('answer', (data) => handleAnswer(data, pc));
+                socket.on('ice-candidate', (data) => handleIceCandidate(data, pc));
+                socket.on('file-meta', handleFileMeta);
+                socket.on('transfer-confirmed', handleTransferConfirmed);
+                socket.on('user-left', handleUserLeft);
+
+                // Connect now
+                socket.connect();
             });
-
-            // Set up event handlers
-            socket.on('connect', () => {
-                debugLog('Connected to signaling server');
-            });
-
-            socket.on('disconnect', () => {
-               
-                showError('Lost connection to signaling server', true);
-            });
-
-            socket.on('connect_error', (error) => {
-                
-                showError('Could not connect to signaling server');
-            });
-
-            socket.on('user-joined', createOffer);
-            socket.on('offer', (data) => handleOffer(data, pc, socket, roomId));
-            socket.on('answer', (data) => handleAnswer(data, pc));
-            socket.on('ice-candidate', (data) => handleIceCandidate(data, pc));
-            socket.on('file-meta', handleFileMeta);
-            socket.on('transfer-confirmed', handleTransferConfirmed);
-            socket.on('user-left', handleUserLeft);
-
-            // Connect now
-            socket.connect();
-
-            return socket;
         }
 
         // Cleanup on page unload
@@ -1533,16 +1788,25 @@
                 return;
             }
 
-          
+
 
             try {
                 if (fileWriter) {
-                  
+
                     updateProgressBar('receive-progress', receivingFile.size, receivingFile.size);
                     document.getElementById('receive-status').textContent = 'Finalizing file...';
 
-                    await fileWriter.close();
-                  
+                    // Safely close the file writer
+                    try {
+                        await fileWriter.close();
+                        debugLog('File System API write completed');
+                        // Set fileWriter to null immediately after closing
+                        fileWriter = null;
+                    } catch (closeError) {
+                        console.error('Error closing file writer:', closeError);
+                        // Even if close fails, set to null to prevent further attempts
+                        fileWriter = null;
+                    }
 
                     connectionState = 'completed';
                     showSuccess('Transfer completed! You can now download the file.');
@@ -1552,7 +1816,7 @@
                     }, 50);
 
                     socket.emit('transfer-confirmed', { roomId });
-                    
+
                     // # hide the download button and cancel button
                     downloadBtn.style.display = 'none';
                     const cancelBtn = document.getElementById('cancel-btn');

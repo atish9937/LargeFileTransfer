@@ -344,6 +344,25 @@ function generateSecureRoomId() {
     }
 }
 
+// ===== PASSWORD HASHING =====
+async function hashPassword(password) {
+    if (!password || password.length < 4) {
+        return null;
+    }
+
+    try {
+        const encoder = new TextEncoder();
+        const data = encoder.encode(password);
+        const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        return hashHex;
+    } catch (error) {
+        console.error('Password hashing failed');
+        return null;
+    }
+}
+
 // ===== FAQ TOGGLE FUNCTION =====
 function toggleFAQ(questionElement) {
     const faqItem = questionElement.parentNode;

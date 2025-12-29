@@ -24,8 +24,39 @@
 
     <main class="main-content-wrapper" role="main" style="display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding-top: 3rem; min-height: calc(100vh - 200px);">
         <section class="container" aria-label="File receiving interface" style="min-height: 500px;">
+            <!-- Password Prompt Modal (Receiver) -->
+            <div id="password-prompt" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 9999;" role="dialog" aria-label="Password required">
+                <div style="background: rgba(0,0,0,0.9); position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; align-items: center; justify-content: center;">
+                    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 40px; border-radius: 16px; max-width: 500px; width: 90%; box-shadow: 0 20px 60px rgba(0,0,0,0.5);">
+                        <h2 style="margin-bottom: 15px; text-align: center;">🔒 Password Protected Transfer</h2>
+                        <p style="margin-bottom: 25px; color: rgba(255,255,255,0.9); text-align: center;">
+                            This file transfer is password protected. Enter the password to continue.
+                        </p>
+                        <input
+                            type="password"
+                            id="receiver-password-input"
+                            placeholder="Enter password"
+                            style="width: 100%; padding: 15px; border-radius: 8px; border: none; font-size: 1em; margin-bottom: 10px; box-sizing: border-box;"
+                            autofocus
+                        />
+                        <p id="password-error" style="color: #ff6b6b; margin-bottom: 15px; display: none; font-size: 0.9em; text-align: center;"></p>
+                        <div style="display: flex; gap: 10px;">
+                            <button id="submit-password-btn" class="btn" style="flex: 1; padding: 15px;">
+                                Unlock Transfer
+                            </button>
+                            <button id="cancel-password-btn" class="btn" style="flex: 1; padding: 15px; background-color: #6c757d;">
+                                Cancel
+                            </button>
+                        </div>
+                        <p style="font-size: 0.85em; color: rgba(255,255,255,0.7); margin-top: 15px; text-align: center;">
+                            Ask the sender for the password if you don't have it.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
             <!-- Receive Screen -->
-            <div id="receive-screen" role="region" aria-label="File receiving interface">
+            <div id="receive-screen" role="region" aria-label="File receiving interface" style="display: none;">
                 <h1>Incoming File</h1>
                 <p>You are about to receive a file.</p>
                 <div class="file-info">
@@ -135,19 +166,123 @@
         async function initializeReceiver() {
             showCompatibilityWarnings();
 
+            // Setup event listeners BEFORE checking room
+            socket.on('room-info', (data) => {
+                console.log('🔐 [RECEIVER] Received room-info:', {
+                    exists: data.exists,
+                    isProtected: data.isProtected,
+                    hasUsers: data.hasUsers,
+                    fullData: data
+                });
+
+                if (data.exists && data.isProtected) {
+                    console.log('🔐 [RECEIVER] Room is protected, showing password prompt');
+                    // Show password prompt
+                    document.getElementById('password-prompt').style.display = 'block';
+                    setupPasswordPrompt();
+                } else if (data.exists) {
+                    console.log('🔐 [RECEIVER] Room exists but no password required, proceeding');
+                    // No password required, proceed normally
+                    proceedToReceive();
+                } else {
+                    console.log('🔐 [RECEIVER] Room does not exist');
+                    // Room doesn't exist
+                    document.getElementById('receive-screen').style.display = 'block';
+                    showError('Transfer link is invalid or expired');
+                }
+            });
+
+            socket.on('room-not-found', () => {
+                document.getElementById('receive-screen').style.display = 'block';
+                showError('Transfer link is invalid or expired');
+            });
+
+            // Check if room exists and if it's password-protected
+            console.log('🔐 [RECEIVER] Checking room:', roomId);
+            socket.emit('check-room', { roomId });
+        }
+
+        // Setup password prompt handlers
+        function setupPasswordPrompt() {
+            const passwordInput = document.getElementById('receiver-password-input');
+            const submitBtn = document.getElementById('submit-password-btn');
+            const cancelPasswordBtn = document.getElementById('cancel-password-btn');
+            const errorMsg = document.getElementById('password-error');
+
+            // Submit password
+            const submitHandler = async () => {
+                const password = passwordInput.value.trim();
+
+                if (!password) {
+                    errorMsg.textContent = 'Please enter a password';
+                    errorMsg.style.display = 'block';
+                    return;
+                }
+
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Verifying...';
+                errorMsg.style.display = 'none';
+
+                // Hash password and verify
+                const passwordHash = await hashPassword(password);
+
+                socket.emit('verify-password', { roomId, passwordHash });
+            };
+
+            submitBtn.addEventListener('click', submitHandler);
+
+            // Handle password verification result
+            socket.on('password-verified', (data) => {
+                if (data.valid) {
+                    // Password correct - proceed to receive
+                    document.getElementById('password-prompt').style.display = 'none';
+                    proceedToReceive();
+                } else {
+                    // Password incorrect
+                    errorMsg.textContent = 'Incorrect password. Please try again.';
+                    errorMsg.style.display = 'block';
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Unlock Transfer';
+                    passwordInput.value = '';
+                    passwordInput.focus();
+                }
+            });
+
+            // Cancel button
+            cancelPasswordBtn.addEventListener('click', () => {
+                window.location.href = '/';
+            });
+
+            // Enter key to submit
+            passwordInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    submitHandler();
+                }
+            });
+        }
+
+        async function proceedToReceive() {
+            console.log('🔐 [RECEIVER] proceedToReceive called - showing receive screen');
+            document.getElementById('receive-screen').style.display = 'block';
+
             if ('showSaveFilePicker' in window) {
                 downloadBtn.textContent = 'Accept & Save';
             }
 
+            console.log('🔐 [RECEIVER] Loading TURN configuration...');
             // Load TURN configuration before setting up peer connection
             await loadTurnConfig();
+            console.log('🔐 [RECEIVER] TURN configuration loaded');
 
-            // Initialize peer connection and join room
-            
-            socket.emit('join-room', roomId);
-            setTimeout(() => {
-                setupPeerConnection(false);
-            }, 100);
+            // IMPORTANT: Set up peer connection BEFORE joining room
+            // This prevents race condition where offer arrives before pc is ready
+            console.log('🔐 [RECEIVER] Setting up peer connection...');
+            setupPeerConnection(false);
+            console.log('🔐 [RECEIVER] Peer connection ready');
+
+            // Now join room - sender will be notified and can send offer
+            console.log('🔐 [RECEIVER] Joining room:', roomId);
+            socket.emit('join-room', { roomId });
 
             // Event listeners
             cancelBtn.addEventListener('click', () => {

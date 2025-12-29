@@ -163,6 +163,23 @@ function isValidSocketData(data) {
     return data && typeof data === 'object' && isValidRoomId(data.roomId);
 }
 
+// Store rooms with password hashes (in-memory)
+const rooms = new Map(); // { roomId: { users: Set, passwordHash: string|null, createdAt: Date } }
+
+// Cleanup old rooms every 10 minutes
+setInterval(() => {
+    const now = new Date();
+    const ROOM_TIMEOUT = 10 * 60 * 1000; // 10 minutes
+
+    rooms.forEach((room, roomId) => {
+        const age = now - room.createdAt;
+        if (age > ROOM_TIMEOUT && room.users.size === 0) {
+            rooms.delete(roomId);
+            console.log('Cleaned up old room:', roomId);
+        }
+    });
+}, 10 * 60 * 1000);
+
 // Rate limiting middleware for socket connections
 io.use((socket, next) => {
     const clientIP = socket.handshake.address;
@@ -194,15 +211,136 @@ io.use((socket, next) => {
 io.on('connection', (socket) => {
     console.log(`User connected: ${socket.id}`);
 
-    // A user wants to join a room
-    socket.on('join-room', (roomId) => {
+    // Check if room exists and if it's protected
+    socket.on('check-room', ({ roomId }) => {
+        console.log('🔐 [SERVER] Received check-room for roomId:', roomId);
+
         if (!isValidRoomId(roomId)) {
-            socket.emit('error', 'Invalid room ID format');
+            console.log('🔐 [SERVER] Invalid room ID, emitting room-not-found');
+            socket.emit('room-not-found');
             return;
         }
 
+        const room = rooms.get(roomId);
+
+        if (!room) {
+            console.log('🔐 [SERVER] Room not found, emitting room-not-found');
+            socket.emit('room-not-found');
+            return;
+        }
+
+        const roomInfo = {
+            exists: true,
+            isProtected: !!room.passwordHash,
+            hasUsers: room.users.size > 0
+        };
+        console.log('🔐 [SERVER] Room found, emitting room-info:', {
+            exists: roomInfo.exists,
+            isProtected: roomInfo.isProtected,
+            hasUsers: roomInfo.hasUsers,
+            passwordHashExists: !!room.passwordHash
+        });
+
+        socket.emit('room-info', roomInfo);
+    });
+
+    // Verify password for protected room
+    socket.on('verify-password', ({ roomId, passwordHash }) => {
+        if (!isValidRoomId(roomId) || typeof passwordHash !== 'string') {
+            socket.emit('password-verified', { valid: false });
+            return;
+        }
+
+        const room = rooms.get(roomId);
+
+        if (!room) {
+            socket.emit('password-verified', { valid: false });
+            return;
+        }
+
+        // Check if password matches
+        const isValid = room.passwordHash === passwordHash;
+
+        socket.emit('password-verified', { valid: isValid });
+
+        if (isValid) {
+            console.log('Password verified for room:', roomId);
+        } else {
+            console.log('Invalid password attempt for room:', roomId);
+        }
+    });
+
+    // A user wants to join a room
+    socket.on('join-room', (data, callback) => {
+        // Handle both old format (string) and new format (object)
+        let roomId, passwordHash, isProtected;
+
+        console.log('🔐 [SERVER] Received join-room:', {
+            dataType: typeof data,
+            isString: typeof data === 'string',
+            isObject: typeof data === 'object',
+            data: data
+        });
+
+        if (typeof data === 'string') {
+            // Old format: just roomId
+            roomId = data;
+            passwordHash = null;
+            isProtected = false;
+        } else if (typeof data === 'object' && data.roomId) {
+            // New format: object with roomId, passwordHash, isProtected
+            roomId = data.roomId;
+            passwordHash = data.passwordHash || null;
+            isProtected = data.isProtected || false;
+            console.log('🔐 [SERVER] Parsed join-room data:', {
+                roomId,
+                hasPasswordHash: !!passwordHash,
+                isProtected,
+                passwordHashLength: passwordHash ? passwordHash.length : 0
+            });
+        } else {
+            socket.emit('error', 'Invalid join-room data');
+            if (callback) callback({ success: false, error: 'Invalid data' });
+            return;
+        }
+
+        if (!isValidRoomId(roomId)) {
+            socket.emit('error', 'Invalid room ID format');
+            if (callback) callback({ success: false, error: 'Invalid room ID' });
+            return;
+        }
+
+        // If creating new room with password
+        if (isProtected && passwordHash) {
+            if (!rooms.has(roomId)) {
+                rooms.set(roomId, {
+                    users: new Set(),
+                    passwordHash: passwordHash,
+                    createdAt: new Date()
+                });
+                console.log('🔐 [SERVER] Created protected room:', roomId, 'with passwordHash:', passwordHash ? passwordHash.substring(0, 10) + '...' : null);
+            }
+        } else if (!rooms.has(roomId)) {
+            // Create unprotected room
+            rooms.set(roomId, {
+                users: new Set(),
+                passwordHash: null,
+                createdAt: new Date()
+            });
+            console.log('Created unprotected room:', roomId);
+        }
+
+        const room = rooms.get(roomId);
+
+        // Add user to room
         socket.join(roomId);
-        console.log(`User ${socket.id} joined room: ${roomId}`);
+        room.users.add(socket.id);
+
+        console.log(`User ${socket.id} joined room: ${roomId} - Total users: ${room.users.size}`);
+
+        // Send acknowledgement that room is created
+        if (callback) callback({ success: true, roomId });
+
         // Notify others in the room that a new user has joined
         socket.to(roomId).emit('user-joined', socket.id);
     });
@@ -260,14 +398,22 @@ io.on('connection', (socket) => {
 
     socket.on('disconnect', () => {
         console.log(`User disconnected: ${socket.id}`);
-        // Notify other users in all rooms this socket was part of
-        if (socket.rooms) {
-            socket.rooms.forEach(roomId => {
-                if (roomId !== socket.id) { // Skip the socket's own room
-                    socket.to(roomId).emit('user-left', { socketId: socket.id });
+
+        // Remove from all rooms and cleanup
+        rooms.forEach((room, roomId) => {
+            if (room.users.has(socket.id)) {
+                room.users.delete(socket.id);
+                socket.to(roomId).emit('user-left', { userId: socket.id });
+
+                console.log(`User ${socket.id} left room: ${roomId} - Remaining users: ${room.users.size}`);
+
+                // Delete room if empty
+                if (room.users.size === 0) {
+                    rooms.delete(roomId);
+                    console.log('Deleted empty room:', roomId);
                 }
-            });
-        }
+            }
+        });
     });
 });
 
