@@ -213,10 +213,7 @@ io.on('connection', (socket) => {
 
     // Check if room exists and if it's protected
     socket.on('check-room', ({ roomId }) => {
-        console.log('🔐 [SERVER] Received check-room for roomId:', roomId);
-
         if (!isValidRoomId(roomId)) {
-            console.log('🔐 [SERVER] Invalid room ID, emitting room-not-found');
             socket.emit('room-not-found');
             return;
         }
@@ -224,7 +221,6 @@ io.on('connection', (socket) => {
         const room = rooms.get(roomId);
 
         if (!room) {
-            console.log('🔐 [SERVER] Room not found, emitting room-not-found');
             socket.emit('room-not-found');
             return;
         }
@@ -234,12 +230,6 @@ io.on('connection', (socket) => {
             isProtected: !!room.passwordHash,
             hasUsers: room.users.size > 0
         };
-        console.log('🔐 [SERVER] Room found, emitting room-info:', {
-            exists: roomInfo.exists,
-            isProtected: roomInfo.isProtected,
-            hasUsers: roomInfo.hasUsers,
-            passwordHashExists: !!room.passwordHash
-        });
 
         socket.emit('room-info', roomInfo);
     });
@@ -275,13 +265,6 @@ io.on('connection', (socket) => {
         // Handle both old format (string) and new format (object)
         let roomId, passwordHash, isProtected;
 
-        console.log('🔐 [SERVER] Received join-room:', {
-            dataType: typeof data,
-            isString: typeof data === 'string',
-            isObject: typeof data === 'object',
-            data: data
-        });
-
         if (typeof data === 'string') {
             // Old format: just roomId
             roomId = data;
@@ -292,12 +275,6 @@ io.on('connection', (socket) => {
             roomId = data.roomId;
             passwordHash = data.passwordHash || null;
             isProtected = data.isProtected || false;
-            console.log('🔐 [SERVER] Parsed join-room data:', {
-                roomId,
-                hasPasswordHash: !!passwordHash,
-                isProtected,
-                passwordHashLength: passwordHash ? passwordHash.length : 0
-            });
         } else {
             socket.emit('error', 'Invalid join-room data');
             if (callback) callback({ success: false, error: 'Invalid data' });
@@ -318,7 +295,7 @@ io.on('connection', (socket) => {
                     passwordHash: passwordHash,
                     createdAt: new Date()
                 });
-                console.log('🔐 [SERVER] Created protected room:', roomId, 'with passwordHash:', passwordHash ? passwordHash.substring(0, 10) + '...' : null);
+                console.log('Created protected room:', roomId);
             }
         } else if (!rooms.has(roomId)) {
             // Create unprotected room

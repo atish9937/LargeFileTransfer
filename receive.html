@@ -168,24 +168,14 @@
 
             // Setup event listeners BEFORE checking room
             socket.on('room-info', (data) => {
-                console.log('🔐 [RECEIVER] Received room-info:', {
-                    exists: data.exists,
-                    isProtected: data.isProtected,
-                    hasUsers: data.hasUsers,
-                    fullData: data
-                });
-
                 if (data.exists && data.isProtected) {
-                    console.log('🔐 [RECEIVER] Room is protected, showing password prompt');
                     // Show password prompt
                     document.getElementById('password-prompt').style.display = 'block';
                     setupPasswordPrompt();
                 } else if (data.exists) {
-                    console.log('🔐 [RECEIVER] Room exists but no password required, proceeding');
                     // No password required, proceed normally
                     proceedToReceive();
                 } else {
-                    console.log('🔐 [RECEIVER] Room does not exist');
                     // Room doesn't exist
                     document.getElementById('receive-screen').style.display = 'block';
                     showError('Transfer link is invalid or expired');
@@ -198,7 +188,6 @@
             });
 
             // Check if room exists and if it's password-protected
-            console.log('🔐 [RECEIVER] Checking room:', roomId);
             socket.emit('check-room', { roomId });
         }
 
@@ -262,26 +251,20 @@
         }
 
         async function proceedToReceive() {
-            console.log('🔐 [RECEIVER] proceedToReceive called - showing receive screen');
             document.getElementById('receive-screen').style.display = 'block';
 
             if ('showSaveFilePicker' in window) {
                 downloadBtn.textContent = 'Accept & Save';
             }
 
-            console.log('🔐 [RECEIVER] Loading TURN configuration...');
             // Load TURN configuration before setting up peer connection
             await loadTurnConfig();
-            console.log('🔐 [RECEIVER] TURN configuration loaded');
 
             // IMPORTANT: Set up peer connection BEFORE joining room
             // This prevents race condition where offer arrives before pc is ready
-            console.log('🔐 [RECEIVER] Setting up peer connection...');
             setupPeerConnection(false);
-            console.log('🔐 [RECEIVER] Peer connection ready');
 
             // Now join room - sender will be notified and can send offer
-            console.log('🔐 [RECEIVER] Joining room:', roomId);
             socket.emit('join-room', { roomId });
 
             // Event listeners
