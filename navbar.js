@@ -12,6 +12,8 @@ function createNavbar() {
             <div class="navbar-right">
                 <ul class="navbar-nav" id="navbar-nav">
                     <li><a href="/"><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href="/blog">Blog</a></li>
+                    <li><a href="/about">About</a></li>
                 </ul>
                 <button class="navbar-toggle" id="navbar-toggle" aria-label="Toggle navigation" aria-expanded="false">
                     <span class="hamburger-line"></span>

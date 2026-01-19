@@ -112,6 +112,29 @@ app.get('/terms(|/)', (req, res) => {
     res.sendFile(path.join(__dirname, 'terms.html'));
 });
 
+// Blog routes
+app.get('/blog(|/)', (req, res) => {
+    res.sendFile(path.join(__dirname, 'blog.html'));
+});
+
+// Serve blog images statically - MUST come before /blog/:slug route
+app.use('/blog/images', express.static(path.join(__dirname, 'blog', 'images')));
+
+// Individual blog post route - must come after /blog/ and /blog/images routes
+app.get('/blog/:slug', (req, res) => {
+    const slug = req.params.slug;
+    const blogPostPath = path.join(__dirname, 'blog', `${slug}.html`);
+
+    // Check if file exists
+    const fs = require('fs');
+    if (fs.existsSync(blogPostPath)) {
+        res.sendFile(blogPostPath);
+    } else {
+        // Blog post not found, redirect to blog listing
+        res.redirect('/blog');
+    }
+});
+
 // Handle receiver route with dedicated receive page
 app.get('/receive/:roomId', (req, res) => {
     res.sendFile(path.join(__dirname, 'receive.html'));

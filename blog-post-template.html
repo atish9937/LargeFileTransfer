@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+
+    <!-- UPDATE THESE META TAGS FOR EACH POST -->
+    <title>[POST TITLE] | LargeFileTransfer.org Blog</title>
+    <meta name="description" content="[POST EXCERPT/DESCRIPTION - 150-160 characters]">
+    <meta name="keywords" content="[keyword1, keyword2, keyword3, keyword4, keyword5]">
+    <link rel="canonical" href="https://largefiletransfer.org/blog/[post-slug]">
+
+    <!-- Open Graph / Facebook -->
+    <!-- IMPORTANT: Update [post-slug] with your actual slug (same as filename) -->
+    <!-- Image will auto-detect from /blog/images/[post-slug].jpg -->
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://largefiletransfer.org/blog/[post-slug]">
+    <meta property="og:title" content="[POST TITLE]">
+    <meta property="og:description" content="[POST EXCERPT]">
+    <meta property="og:image" content="https://largefiletransfer.org/blog/images/[post-slug].jpg">
+    <meta property="article:published_time" content="[2025-01-15T00:00:00Z]">
+    <meta property="article:author" content="LargeFileTransfer.org">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://largefiletransfer.org/blog/[post-slug]">
+    <meta property="twitter:title" content="[POST TITLE]">
+    <meta property="twitter:description" content="[POST EXCERPT]">
+    <meta property="twitter:image" content="https://largefiletransfer.org/blog/images/[post-slug].jpg">
+
+    <link rel="stylesheet" href="/style.css">
+
+    <!-- Blog Post Specific Styles -->
+    <style>
+        .blog-post-wrapper {
+            padding: 2rem;
+            min-height: calc(100vh - 200px);
+        }
+
+        .blog-post-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 3rem 2.5rem;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+        }
+
+        .blog-post-header {
+            margin-bottom: 40px;
+        }
+
+        .blog-post-category {
+            color: #667eea;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.9em;
+            letter-spacing: 0.5px;
+            margin-bottom: 15px;
+            display: inline-block;
+        }
+
+        .blog-post-title {
+            font-size: 2.5em;
+            line-height: 1.2;
+            margin-bottom: 20px;
+            color: #2d3748;
+            font-weight: 700;
+        }
+
+        .blog-post-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            font-size: 0.95em;
+            color: #4a5568;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .blog-post-meta span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .blog-post-featured-image {
+            width: 100%;
+            max-width: 800px;
+            height: auto;
+            border-radius: 12px;
+            margin-bottom: 40px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .blog-post-content {
+            font-size: 1.05em;
+            line-height: 1.8;
+            color: #2d3748;
+        }
+
+        .blog-post-content h2 {
+            font-size: 1.8em;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            color: #2d3748;
+            font-weight: 700;
+        }
+
+        .blog-post-content h3 {
+            font-size: 1.4em;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            color: #2d3748;
+            font-weight: 600;
+        }
+
+        .blog-post-content p {
+            margin-bottom: 20px;
+        }
+
+        .blog-post-content ul,
+        .blog-post-content ol {
+            margin-bottom: 20px;
+            padding-left: 30px;
+        }
+
+        .blog-post-content li {
+            margin-bottom: 10px;
+        }
+
+        .blog-post-content blockquote {
+            border-left: 4px solid #667eea;
+            padding-left: 20px;
+            margin: 30px 0;
+            font-style: italic;
+            color: #555;
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 4px;
+        }
+
+        .blog-post-content code {
+            background: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+
+        .blog-post-content pre {
+            background: #f4f4f4;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin-bottom: 20px;
+        }
+
+        .blog-post-content img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .blog-post-cta {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            border-radius: 12px;
+            text-align: center;
+            margin: 50px 0;
+        }
+
+        .blog-post-cta h3 {
+            font-size: 1.8em;
+            margin-bottom: 15px;
+        }
+
+        .blog-post-cta p {
+            font-size: 1.1em;
+            margin-bottom: 25px;
+            opacity: 0.95;
+        }
+
+        .blog-post-cta .btn {
+            background: white;
+            color: #667eea;
+            padding: 15px 35px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-block;
+            transition: transform 0.3s ease;
+        }
+
+        .blog-post-cta .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .blog-post-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 40px 0;
+            padding-top: 30px;
+            border-top: 2px solid #f0f0f0;
+        }
+
+        .blog-post-tag {
+            background: #f0f0f0;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            color: #666;
+            text-decoration: none;
+            transition: background 0.3s ease;
+        }
+
+        .blog-post-tag:hover {
+            background: #e0e0e0;
+        }
+
+        .blog-post-navigation {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            margin: 50px 0;
+            padding-top: 30px;
+            border-top: 2px solid #f0f0f0;
+        }
+
+        .blog-post-nav-link {
+            text-decoration: none;
+            color: #333;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            flex: 1;
+            transition: background 0.3s ease;
+        }
+
+        .blog-post-nav-link:hover {
+            background: #f0f0f0;
+        }
+
+        .blog-post-nav-label {
+            font-size: 0.85em;
+            color: #667eea;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .back-to-blog {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+            margin-bottom: 30px;
+            transition: gap 0.3s ease;
+        }
+
+        .back-to-blog:hover {
+            gap: 12px;
+        }
+
+        @media (max-width: 768px) {
+            .blog-post-wrapper {
+                padding: 1rem;
+            }
+
+            .blog-post-container {
+                padding: 2rem 1.5rem;
+                border-radius: 16px;
+            }
+
+            .blog-post-title {
+                font-size: 2em;
+            }
+
+            .blog-post-navigation {
+                flex-direction: column;
+            }
+
+            .blog-post-content {
+                font-size: 1em;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .blog-post-wrapper {
+                padding: 0.5rem;
+            }
+
+            .blog-post-container {
+                padding: 1.5rem 1rem;
+                border-radius: 12px;
+            }
+
+            .blog-post-title {
+                font-size: 1.75em;
+            }
+
+            .blog-post-content h2 {
+                font-size: 1.5em;
+            }
+
+            .blog-post-content h3 {
+                font-size: 1.2em;
+            }
+        }
+    </style>
+
+    <!-- Structured Data for Blog Post -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        "headline": "[POST TITLE]",
+        "description": "[POST EXCERPT]",
+        "image": "https://largefiletransfer.org/blog/images/[post-slug].jpg",
+        "datePublished": "[2025-01-15T00:00:00Z]",
+        "dateModified": "[2025-01-15T00:00:00Z]",
+        "author": {
+            "@type": "Organization",
+            "name": "LargeFileTransfer.org"
+        },
+        "publisher": {
+            "@type": "Organization",
+            "name": "LargeFileTransfer.org",
+            "logo": {
+                "@type": "ImageObject",
+                "url": "https://largefiletransfer.org/large-file-transfer.png"
+            }
+        },
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https://largefiletransfer.org/blog/[post-slug]"
+        }
+    }
+    </script>
+</head>
+<body>
+    <div id="navbar-container"></div>
+
+    <div class="blog-post-wrapper">
+        <article class="blog-post-container">
+            <a href="/blog" class="back-to-blog">
+                <span>←</span> Back to Blog
+            </a>
+
+        <header class="blog-post-header">
+            <span class="blog-post-category">[CATEGORY]</span>
+            <h1 class="blog-post-title">[POST TITLE]</h1>
+            <div class="blog-post-meta">
+                <span id="post-date">📅 <span class="date-display">Loading...</span></span>
+                <span>⏱️ [8 min read]</span>
+                <span>✍️ LargeFileTransfer Team</span>
+            </div>
+        </header>
+
+        <!-- Featured Image -->
+        <!--
+        IMPORTANT: Update the image path and alt text below!
+        - Image path: /blog/images/[post-slug].jpg (must match your post slug)
+        - Alt text: Descriptive text for SEO (describe what's in the image)
+        - If no image exists, this will hide automatically (onerror handler)
+        -->
+        <img
+            src="/blog/images/[post-slug].jpg"
+            alt="[Descriptive alt text for SEO - describe the image content, mention key article topics]"
+            class="blog-post-featured-image"
+            loading="lazy"
+            onerror="this.style.display='none';">
+
+        <div class="blog-post-content">
+            <!--
+            ============================================
+            START WRITING YOUR BLOG POST CONTENT HERE
+            ============================================
+            -->
+
+            <h2>Introduction</h2>
+            <p>Write your introduction paragraph here. Hook the reader with a compelling opening that addresses their pain point or question.</p>
+
+            <h2>Section 1: [Your First Main Point]</h2>
+            <p>Write your content here. Use clear, concise language. Break up long paragraphs.</p>
+
+            <h3>Subsection 1.1</h3>
+            <p>Add subsections as needed to organize your content.</p>
+
+            <ul>
+                <li>Use bullet points for lists</li>
+                <li>Keep items concise</li>
+                <li>Ensure they're easy to scan</li>
+            </ul>
+
+            <h2>Section 2: [Your Second Main Point]</h2>
+            <p>Continue with your main points. Use examples, data, and specific details to support your arguments.</p>
+
+            <blockquote>
+                Use blockquotes to highlight important points or quotes.
+            </blockquote>
+
+            <h2>Section 3: [Your Third Main Point]</h2>
+            <p>Keep your content valuable and actionable. What can readers do with this information?</p>
+
+            <ol>
+                <li>Use numbered lists for step-by-step instructions</li>
+                <li>Make each step clear and actionable</li>
+                <li>Include any important warnings or tips</li>
+            </ol>
+
+            <h2>Conclusion</h2>
+            <p>Summarize your main points and provide a clear takeaway for readers. What should they remember or do next?</p>
+
+            <!--
+            ============================================
+            END OF BLOG POST CONTENT
+            ============================================
+            -->
+        </div>
+
+        <!-- Call to Action -->
+        <div class="blog-post-cta">
+            <h3>Try LargeFileTransfer.org Now</h3>
+            <p>Send large files up to 10GB for free with end-to-end encryption. No registration required.</p>
+            <a href="/" class="btn">Start Transferring Files</a>
+        </div>
+
+        <!-- Tags -->
+        <div class="blog-post-tags">
+            <span style="color: #666; margin-right: 10px;">Tags:</span>
+            <a href="/blog?tag=file-transfer" class="blog-post-tag">file transfer</a>
+            <a href="/blog?tag=security" class="blog-post-tag">security</a>
+            <a href="/blog?tag=guides" class="blog-post-tag">guides</a>
+            <!-- Add more tags as needed -->
+        </div>
+
+        <!-- Navigation to other posts (optional) -->
+        <!--
+        <nav class="blog-post-navigation">
+            <a href="/blog/[previous-post-slug]" class="blog-post-nav-link">
+                <div class="blog-post-nav-label">← Previous</div>
+                <div>[Previous Post Title]</div>
+            </a>
+            <a href="/blog/[next-post-slug]" class="blog-post-nav-link" style="text-align: right;">
+                <div class="blog-post-nav-label">Next →</div>
+                <div>[Next Post Title]</div>
+            </a>
+        </nav>
+        -->
+        </article>
+    </div>
+
+    <footer class="footer-main">
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="/privacy">Privacy Policy</a>
+                <a href="/terms">Terms of Service</a>
+            </div>
+            <div class="footer-social">
+                <a href="https://twitter.com/intent/tweet?text=Check%20out%20LargeFileTransfer.org%20-%20Send%20large%20files%20up%20to%2010GB%20for%20free%20with%20end-to-end%20encryption!&url=https://largefiletransfer.org" target="_blank" rel="noopener" aria-label="Share on Twitter">𝕏</a>
+                <a href="https://www.facebook.com/sharer/sharer.php?u=https://largefiletransfer.org" target="_blank" rel="noopener" aria-label="Share on Facebook">f</a>
+                <a href="https://www.linkedin.com/sharing/share-offsite/?url=https://largefiletransfer.org" target="_blank" rel="noopener" aria-label="Share on LinkedIn">in</a>
+                <a href="https://reddit.com/submit?url=https://largefiletransfer.org&title=Free%20Large%20File%20Transfer%20-%20Send%20Files%20up%20to%2010GB" target="_blank" rel="noopener" aria-label="Share on Reddit">●</a>
+                <a href="mailto:?subject=Check%20out%20LargeFileTransfer.org&body=I%20found%20this%20great%20tool%20for%20sending%20large%20files%20securely:%20https://largefiletransfer.org" aria-label="Share via Email">✉</a>
+            </div>
+            <p class="footer-copyright">&copy; 2025 LargeFileTransfer.org. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="/navbar.js"></script>
+    <script src="/blog.js"></script>
+    <script>
+        // Get current post slug from URL path
+        const currentSlug = window.location.pathname.split('/').pop() || window.location.pathname.split('/')[window.location.pathname.split('/').length - 2];
+
+        // Find the post data from blog.js
+        const currentPost = blogPosts.find(post => post.slug === currentSlug);
+
+        if (currentPost) {
+            // Format date for display
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            const formattedDate = new Date(currentPost.date).toLocaleDateString('en-US', options);
+
+            // Update visible date in the page
+            const dateDisplay = document.querySelector('.date-display');
+            if (dateDisplay) {
+                dateDisplay.textContent = formattedDate;
+            }
+
+            // Update meta tags
+            const publishedTimeMeta = document.querySelector('meta[property="article:published_time"]');
+            if (publishedTimeMeta) {
+                publishedTimeMeta.setAttribute('content', currentPost.date + 'T00:00:00Z');
+            }
+
+            // Update structured data (JSON-LD)
+            const structuredDataScript = document.querySelector('script[type="application/ld+json"]');
+            if (structuredDataScript) {
+                try {
+                    const structuredData = JSON.parse(structuredDataScript.textContent);
+                    structuredData.datePublished = currentPost.date + 'T00:00:00Z';
+                    structuredData.dateModified = currentPost.date + 'T00:00:00Z';
+                    structuredDataScript.textContent = JSON.stringify(structuredData, null, 4);
+                } catch (e) {
+                    console.error('Error updating structured data:', e);
+                }
+            }
+        }
+    </script>
+</body>
+</html>
