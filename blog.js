@@ -27,6 +27,15 @@ const blogPosts = [
         date: '2026-01-19',
         readTime: '8 min read',
         tags: ['P2P file transfer', 'cloud storage', 'file sharing comparison', 'WebRTC', 'privacy']
+    },
+    {
+        slug: 'transfer-large-video-files-best-practices',
+        title: 'Best Practices for Transferring Large Video Files',
+        excerpt: 'Learn the best practices for transferring large video files. Discover compression techniques, optimal formats, and fast transfer methods for 4K videos, raw footage, and video projects.',
+        category: 'Guides',
+        date: '2026-01-20',
+        readTime: '9 min read',
+        tags: ['transfer video files', 'large video file sharing', 'video compression', '4K video', 'video file transfer']
     }
     // Add more blog posts below
 ];
