@@ -8,9 +8,14 @@ const path = require('path');
  */
 
 // Base URL - CHANGE THIS TO YOUR PRODUCTION DOMAIN
-const BASE_URL = process.env.NODE_ENV === 'production'
-    ? 'https://largefiletransfer.org'
-    : 'http://localhost:3000';
+// Detects production in multiple ways:
+// 1. NODE_ENV=production
+// 2. SITE_URL env variable
+// 3. Default to production if neither is set (assumes production deployment)
+const BASE_URL = process.env.SITE_URL
+    || (process.env.NODE_ENV === 'production' ? 'https://largefiletransfer.org' : null)
+    || (process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : null)
+    || 'https://largefiletransfer.org'; // Default to production
 
 // Extract blog posts from blog.js
 function extractBlogPosts() {
