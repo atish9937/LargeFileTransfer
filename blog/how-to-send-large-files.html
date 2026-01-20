@@ -137,11 +137,31 @@
             font-weight: 600;
         }
 
+        /* Featured Image Styles */
+        .blog-post-featured-image {
+            width: 100%;
+            height: auto;
+            max-width: 100%;
+            border-radius: 12px;
+            margin: 30px 0;
+            display: block;
+            object-fit: cover;
+        }
+
+        /* Table Wrapper for Mobile Scrolling */
+        .table-wrapper {
+            width: 100%;
+            overflow-x: auto;
+            margin: 30px 0;
+            -webkit-overflow-scrolling: touch;
+        }
+
         .comparison-table {
             width: 100%;
             border-collapse: collapse;
-            margin: 30px 0;
+            margin: 0;
             font-size: 0.95em;
+            min-width: 600px;
         }
 
         .comparison-table th,
@@ -290,10 +310,21 @@
 
             .comparison-table {
                 font-size: 0.85em;
+                min-width: 500px;
             }
 
             .blog-post-content {
                 font-size: 1em;
+            }
+
+            .blog-post-featured-image {
+                margin: 20px 0;
+                border-radius: 8px;
+            }
+
+            .table-wrapper {
+                margin: 20px -1.5rem;
+                padding: 0 1.5rem;
             }
         }
 
@@ -320,7 +351,30 @@
             }
 
             .comparison-table {
-                font-size: 0.8em;
+                font-size: 0.75em;
+                min-width: 450px;
+            }
+
+            .blog-post-featured-image {
+                margin: 15px 0;
+                border-radius: 6px;
+            }
+
+            .table-wrapper {
+                margin: 15px -1rem;
+                padding: 0 1rem;
+            }
+
+            .blog-post-cta {
+                padding: 25px 20px;
+            }
+
+            .blog-post-cta h3 {
+                font-size: 1.4em;
+            }
+
+            .blog-post-cta p {
+                font-size: 1em;
             }
         }
     </style>
@@ -391,68 +445,70 @@
 
             <h2>Quick Comparison: 7 Methods to Send Large Files</h2>
 
-            <table class="comparison-table">
-                <thead>
-                    <tr>
-                        <th>Method</th>
-                        <th>File Size Limit</th>
-                        <th>Speed</th>
-                        <th>Security</th>
-                        <th>Cost</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><strong>P2P Transfer (LargeFileTransfer.org)</strong></td>
-                        <td>Up to 10GB</td>
-                        <td>⚡⚡⚡ Very Fast</td>
-                        <td>🔒 End-to-end encrypted</td>
-                        <td>Free</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Google Drive</strong></td>
-                        <td>15GB (free tier)</td>
-                        <td>⚡⚡ Moderate</td>
-                        <td>🔒 Encrypted in transit</td>
-                        <td>Free/Paid</td>
-                    </tr>
-                    <tr>
-                        <td><strong>WeTransfer</strong></td>
-                        <td>2GB (free), 200GB (paid)</td>
-                        <td>⚡⚡ Moderate</td>
-                        <td>🔒 Basic encryption</td>
-                        <td>Free/Paid</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Dropbox</strong></td>
-                        <td>2GB (free tier)</td>
-                        <td>⚡⚡ Moderate</td>
-                        <td>🔒 Encrypted in transit</td>
-                        <td>Free/Paid</td>
-                    </tr>
-                    <tr>
-                        <td><strong>OneDrive</strong></td>
-                        <td>5GB (free tier)</td>
-                        <td>⚡⚡ Moderate</td>
-                        <td>🔒 Encrypted in transit</td>
-                        <td>Free/Paid</td>
-                    </tr>
-                    <tr>
-                        <td><strong>FTP/SFTP</strong></td>
-                        <td>No practical limit</td>
-                        <td>⚡⚡⚡ Very Fast</td>
-                        <td>🔒 Varies (SFTP secure)</td>
-                        <td>Varies</td>
-                    </tr>
-                    <tr>
-                        <td><strong>USB Drive (Physical)</strong></td>
-                        <td>Drive capacity</td>
-                        <td>⚡ Slow (shipping)</td>
-                        <td>🔒 Physical security</td>
-                        <td>Low-Medium</td>
-                    </tr>
-                </tbody>
-            </table>
+            <div class="table-wrapper">
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Method</th>
+                            <th>File Size Limit</th>
+                            <th>Speed</th>
+                            <th>Security</th>
+                            <th>Cost</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>P2P Transfer (LargeFileTransfer.org)</strong></td>
+                            <td>Up to 10GB</td>
+                            <td>⚡⚡⚡ Very Fast</td>
+                            <td>🔒 End-to-end encrypted</td>
+                            <td>Free</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Google Drive</strong></td>
+                            <td>15GB (free tier)</td>
+                            <td>⚡⚡ Moderate</td>
+                            <td>🔒 Encrypted in transit</td>
+                            <td>Free/Paid</td>
+                        </tr>
+                        <tr>
+                            <td><strong>WeTransfer</strong></td>
+                            <td>2GB (free), 200GB (paid)</td>
+                            <td>⚡⚡ Moderate</td>
+                            <td>🔒 Basic encryption</td>
+                            <td>Free/Paid</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Dropbox</strong></td>
+                            <td>2GB (free tier)</td>
+                            <td>⚡⚡ Moderate</td>
+                            <td>🔒 Encrypted in transit</td>
+                            <td>Free/Paid</td>
+                        </tr>
+                        <tr>
+                            <td><strong>OneDrive</strong></td>
+                            <td>5GB (free tier)</td>
+                            <td>⚡⚡ Moderate</td>
+                            <td>🔒 Encrypted in transit</td>
+                            <td>Free/Paid</td>
+                        </tr>
+                        <tr>
+                            <td><strong>FTP/SFTP</strong></td>
+                            <td>No practical limit</td>
+                            <td>⚡⚡⚡ Very Fast</td>
+                            <td>🔒 Varies (SFTP secure)</td>
+                            <td>Varies</td>
+                        </tr>
+                        <tr>
+                            <td><strong>USB Drive (Physical)</strong></td>
+                            <td>Drive capacity</td>
+                            <td>⚡ Slow (shipping)</td>
+                            <td>🔒 Physical security</td>
+                            <td>Low-Medium</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
 
             <h2>Method 1: Peer-to-Peer (P2P) File Transfer – Fastest & Most Secure</h2>
 

@@ -137,11 +137,31 @@
             font-weight: 600;
         }
 
+        /* Featured Image Styles */
+        .blog-post-featured-image {
+            width: 100%;
+            height: auto;
+            max-width: 100%;
+            border-radius: 12px;
+            margin: 30px 0;
+            display: block;
+            object-fit: cover;
+        }
+
+        /* Table Wrapper for Mobile Scrolling */
+        .table-wrapper {
+            width: 100%;
+            overflow-x: auto;
+            margin: 30px 0;
+            -webkit-overflow-scrolling: touch;
+        }
+
         .compliance-table {
             width: 100%;
             border-collapse: collapse;
-            margin: 30px 0;
+            margin: 0;
             font-size: 0.95em;
+            min-width: 650px;
         }
 
         .compliance-table th,
@@ -285,10 +305,26 @@
 
             .compliance-table {
                 font-size: 0.85em;
+                min-width: 550px;
             }
 
             .blog-post-content {
                 font-size: 1em;
+            }
+
+            .blog-post-featured-image {
+                margin: 20px 0;
+                border-radius: 8px;
+            }
+
+            .table-wrapper {
+                margin: 20px -1.5rem;
+                padding: 0 1.5rem;
+            }
+
+            .security-checklist, .warning-box, .industry-section {
+                padding: 20px;
+                margin: 20px 0;
             }
         }
 
@@ -315,7 +351,35 @@
             }
 
             .compliance-table {
-                font-size: 0.8em;
+                font-size: 0.75em;
+                min-width: 500px;
+            }
+
+            .blog-post-featured-image {
+                margin: 15px 0;
+                border-radius: 6px;
+            }
+
+            .table-wrapper {
+                margin: 15px -1rem;
+                padding: 0 1rem;
+            }
+
+            .blog-post-cta {
+                padding: 25px 20px;
+            }
+
+            .blog-post-cta h3 {
+                font-size: 1.4em;
+            }
+
+            .blog-post-cta p {
+                font-size: 1em;
+            }
+
+            .security-checklist, .warning-box, .industry-section {
+                padding: 15px;
+                margin: 15px 0;
             }
         }
     </style>
@@ -386,42 +450,44 @@
 
             <h2>Understanding Compliance Requirements by Industry</h2>
 
-            <table class="compliance-table">
-                <thead>
-                    <tr>
-                        <th>Industry</th>
-                        <th>Key Regulations</th>
-                        <th>Primary Requirements</th>
-                        <th>Penalties for Violations</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><strong>Healthcare</strong></td>
-                        <td>HIPAA, HITECH Act</td>
-                        <td>End-to-end encryption, audit logs, BAA agreements, access controls</td>
-                        <td>Up to $1.5M per violation category per year</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Legal</strong></td>
-                        <td>ABA Model Rules, State Bar Ethics</td>
-                        <td>Attorney-client privilege protection, reasonable security measures</td>
-                        <td>Professional sanctions, malpractice liability, disbarment</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Finance</strong></td>
-                        <td>GLBA, SOX, SEC, FINRA</td>
-                        <td>Data encryption, secure storage, access logs, customer privacy</td>
-                        <td>Up to $100K per violation, criminal penalties possible</td>
-                    </tr>
-                    <tr>
-                        <td><strong>All Industries</strong></td>
-                        <td>GDPR (EU clients)</td>
-                        <td>Data subject consent, encryption, breach notification, data minimization</td>
-                        <td>Up to €20M or 4% of global revenue</td>
-                    </tr>
-                </tbody>
-            </table>
+            <div class="table-wrapper">
+                <table class="compliance-table">
+                    <thead>
+                        <tr>
+                            <th>Industry</th>
+                            <th>Key Regulations</th>
+                            <th>Primary Requirements</th>
+                            <th>Penalties for Violations</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Healthcare</strong></td>
+                            <td>HIPAA, HITECH Act</td>
+                            <td>End-to-end encryption, audit logs, BAA agreements, access controls</td>
+                            <td>Up to $1.5M per violation category per year</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Legal</strong></td>
+                            <td>ABA Model Rules, State Bar Ethics</td>
+                            <td>Attorney-client privilege protection, reasonable security measures</td>
+                            <td>Professional sanctions, malpractice liability, disbarment</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Finance</strong></td>
+                            <td>GLBA, SOX, SEC, FINRA</td>
+                            <td>Data encryption, secure storage, access logs, customer privacy</td>
+                            <td>Up to $100K per violation, criminal penalties possible</td>
+                        </tr>
+                        <tr>
+                            <td><strong>All Industries</strong></td>
+                            <td>GDPR (EU clients)</td>
+                            <td>Data subject consent, encryption, breach notification, data minimization</td>
+                            <td>Up to €20M or 4% of global revenue</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
 
             <h2>Healthcare: HIPAA-Compliant File Sharing</h2>
 

@@ -88,13 +88,32 @@
             gap: 5px;
         }
 
+        /* Featured Image Styles - Mobile Optimized */
         .blog-post-featured-image {
             width: 100%;
-            max-width: 800px;
             height: auto;
+            max-width: 100%;
             border-radius: 12px;
-            margin-bottom: 40px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            margin: 30px 0;
+            display: block;
+            object-fit: cover;
+        }
+
+        /* Table Wrapper for Mobile Scrolling */
+        .table-wrapper {
+            width: 100%;
+            overflow-x: auto;
+            margin: 30px 0;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        /* Responsive Tables - Add min-width to prevent crushing on mobile */
+        .blog-post-content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 0;
+            font-size: 0.95em;
+            min-width: 600px;
         }
 
         .blog-post-content {
@@ -271,6 +290,7 @@
             gap: 12px;
         }
 
+        /* Tablet & Mobile Optimization (768px and below) */
         @media (max-width: 768px) {
             .blog-post-wrapper {
                 padding: 1rem;
@@ -292,8 +312,24 @@
             .blog-post-content {
                 font-size: 1em;
             }
+
+            .blog-post-content table {
+                font-size: 0.85em;
+                min-width: 550px;
+            }
+
+            .blog-post-featured-image {
+                margin: 20px 0;
+                border-radius: 8px;
+            }
+
+            .table-wrapper {
+                margin: 20px -1.5rem;
+                padding: 0 1.5rem;
+            }
         }
 
+        /* Mobile Optimization (480px and below) */
         @media (max-width: 480px) {
             .blog-post-wrapper {
                 padding: 0.5rem;
@@ -314,6 +350,33 @@
 
             .blog-post-content h3 {
                 font-size: 1.2em;
+            }
+
+            .blog-post-content table {
+                font-size: 0.75em;
+                min-width: 500px;
+            }
+
+            .blog-post-featured-image {
+                margin: 15px 0;
+                border-radius: 6px;
+            }
+
+            .table-wrapper {
+                margin: 15px -1rem;
+                padding: 0 1rem;
+            }
+
+            .blog-post-cta {
+                padding: 25px 20px;
+            }
+
+            .blog-post-cta h3 {
+                font-size: 1.4em;
+            }
+
+            .blog-post-cta p {
+                font-size: 1em;
             }
         }
     </style>
@@ -408,6 +471,28 @@
             <blockquote>
                 Use blockquotes to highlight important points or quotes.
             </blockquote>
+
+            <!-- IMPORTANT: For tables, ALWAYS wrap them in a table-wrapper div for mobile responsiveness -->
+            <!--
+            <div class="table-wrapper">
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Column 1</th>
+                            <th>Column 2</th>
+                            <th>Column 3</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Data 1</td>
+                            <td>Data 2</td>
+                            <td>Data 3</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            -->
 
             <h2>Section 3: [Your Third Main Point]</h2>
             <p>Keep your content valuable and actionable. What can readers do with this information?</p>

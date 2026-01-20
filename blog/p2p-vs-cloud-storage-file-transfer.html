@@ -137,11 +137,31 @@
             font-weight: 600;
         }
 
+        /* Featured Image Styles */
+        .blog-post-featured-image {
+            width: 100%;
+            height: auto;
+            max-width: 100%;
+            border-radius: 12px;
+            margin: 30px 0;
+            display: block;
+            object-fit: cover;
+        }
+
+        /* Table Wrapper for Mobile Scrolling */
+        .table-wrapper {
+            width: 100%;
+            overflow-x: auto;
+            margin: 30px 0;
+            -webkit-overflow-scrolling: touch;
+        }
+
         .comparison-table {
             width: 100%;
             border-collapse: collapse;
-            margin: 30px 0;
+            margin: 0;
             font-size: 0.95em;
+            min-width: 650px;
         }
 
         .comparison-table th,
@@ -299,10 +319,26 @@
 
             .comparison-table {
                 font-size: 0.85em;
+                min-width: 550px;
             }
 
             .blog-post-content {
                 font-size: 1em;
+            }
+
+            .blog-post-featured-image {
+                margin: 20px 0;
+                border-radius: 8px;
+            }
+
+            .table-wrapper {
+                margin: 20px -1.5rem;
+                padding: 0 1.5rem;
+            }
+
+            .highlight-box, .method-section {
+                padding: 20px;
+                margin: 20px 0;
             }
         }
 
@@ -329,7 +365,35 @@
             }
 
             .comparison-table {
-                font-size: 0.8em;
+                font-size: 0.75em;
+                min-width: 500px;
+            }
+
+            .blog-post-featured-image {
+                margin: 15px 0;
+                border-radius: 6px;
+            }
+
+            .table-wrapper {
+                margin: 15px -1rem;
+                padding: 0 1rem;
+            }
+
+            .blog-post-cta {
+                padding: 25px 20px;
+            }
+
+            .blog-post-cta h3 {
+                font-size: 1.4em;
+            }
+
+            .blog-post-cta p {
+                font-size: 1em;
+            }
+
+            .highlight-box, .method-section {
+                padding: 15px;
+                margin: 15px 0;
             }
         }
     </style>
@@ -423,67 +487,69 @@
 
             <h2>Head-to-Head Comparison</h2>
 
-            <table class="comparison-table">
-                <thead>
-                    <tr>
-                        <th>Factor</th>
-                        <th>P2P File Transfer</th>
-                        <th>Cloud Storage</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><strong>Speed</strong></td>
-                        <td>✓ Direct connection, often faster (limited by your upload/download speeds)</td>
-                        <td>Upload + download time; speed varies by provider and server location</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Privacy</strong></td>
-                        <td>✓ File never stored on third-party servers</td>
-                        <td>File stored on provider's servers; subject to their privacy policies</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Security</strong></td>
-                        <td>✓ End-to-end encryption; provider never has access</td>
-                        <td>Encryption varies; provider typically can access files</td>
-                    </tr>
-                    <tr>
-                        <td><strong>File Size Limits</strong></td>
-                        <td>Often higher or unlimited (depends on connection)</td>
-                        <td>Limited by storage plan; free tiers typically 2-15GB total</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Cost</strong></td>
-                        <td>✓ Usually free with no storage costs</td>
-                        <td>Free tier limited; paid plans $10-20/month for adequate storage</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Requires Both Online</strong></td>
-                        <td>Yes - sender and receiver must be online simultaneously</td>
-                        <td>✓ No - upload once, recipient downloads anytime</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Multiple Recipients</strong></td>
-                        <td>Challenging - must send to each person individually</td>
-                        <td>✓ Easy - share one link with unlimited recipients</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Collaboration</strong></td>
-                        <td>Not designed for collaboration</td>
-                        <td>✓ Supports real-time collaboration, commenting, version history</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Persistent Storage</strong></td>
-                        <td>No - files deleted after transfer</td>
-                        <td>✓ Yes - files remain accessible until manually deleted</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Setup Required</strong></td>
-                        <td>✓ Minimal - no account needed for most P2P services</td>
-                        <td>Account creation required; may need to install software</td>
-                    </tr>
-                </tbody>
-            </table>
+            <div class="table-wrapper">
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Factor</th>
+                            <th>P2P File Transfer</th>
+                            <th>Cloud Storage</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Speed</strong></td>
+                            <td>✓ Direct connection, often faster (limited by your upload/download speeds)</td>
+                            <td>Upload + download time; speed varies by provider and server location</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Privacy</strong></td>
+                            <td>✓ File never stored on third-party servers</td>
+                            <td>File stored on provider's servers; subject to their privacy policies</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Security</strong></td>
+                            <td>✓ End-to-end encryption; provider never has access</td>
+                            <td>Encryption varies; provider typically can access files</td>
+                        </tr>
+                        <tr>
+                            <td><strong>File Size Limits</strong></td>
+                            <td>Often higher or unlimited (depends on connection)</td>
+                            <td>Limited by storage plan; free tiers typically 2-15GB total</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Cost</strong></td>
+                            <td>✓ Usually free with no storage costs</td>
+                            <td>Free tier limited; paid plans $10-20/month for adequate storage</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Requires Both Online</strong></td>
+                            <td>Yes - sender and receiver must be online simultaneously</td>
+                            <td>✓ No - upload once, recipient downloads anytime</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Multiple Recipients</strong></td>
+                            <td>Challenging - must send to each person individually</td>
+                            <td>✓ Easy - share one link with unlimited recipients</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Collaboration</strong></td>
+                            <td>Not designed for collaboration</td>
+                            <td>✓ Supports real-time collaboration, commenting, version history</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Persistent Storage</strong></td>
+                            <td>No - files deleted after transfer</td>
+                            <td>✓ Yes - files remain accessible until manually deleted</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Setup Required</strong></td>
+                            <td>✓ Minimal - no account needed for most P2P services</td>
+                            <td>Account creation required; may need to install software</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
 
             <h2>P2P File Transfer: Pros and Cons</h2>
 
