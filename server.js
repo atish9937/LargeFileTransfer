@@ -2,6 +2,7 @@ const express = require('express');
 const http = require('http');
 const path = require('path'); // Import path module
 const { Server } = require('socket.io');
+const { writeSitemap } = require('./generate-sitemap'); // Import sitemap generator
 
 // Load environment variables
 require('dotenv').config();
@@ -110,6 +111,11 @@ app.get('/privacy(|/)', (req, res) => {
 
 app.get('/terms(|/)', (req, res) => {
     res.sendFile(path.join(__dirname, 'terms.html'));
+});
+
+// Sitemap route
+app.get('/sitemap.xml', (req, res) => {
+    res.sendFile(path.join(__dirname, 'sitemap.xml'));
 });
 
 // Blog routes
@@ -419,4 +425,7 @@ io.on('connection', (socket) => {
 
 server.listen(PORT, () => {
     console.log(`Signaling server listening on *:${PORT}`);
+
+    // Auto-generate sitemap on server start
+    writeSitemap();
 });
