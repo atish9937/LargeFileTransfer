@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+
+    <title>How to Send Large Files from Phone to Computer | LargeFileTransfer.org</title>
+    <meta name="description" content="Learn how to easily send large files from your phone to computer. Step-by-step guide for transferring videos, photos, and documents using P2P, cloud storage, and more.">
+    <meta name="keywords" content="mobile file transfer, phone to computer transfer, send files from phone, transfer photos from phone, mobile to PC file transfer">
+    <link rel="canonical" href="https://largefiletransfer.org/blog/send-large-files-phone-to-computer">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://largefiletransfer.org/blog/send-large-files-phone-to-computer">
+    <meta property="og:title" content="How to Send Large Files from Phone to Computer">
+    <meta property="og:description" content="Step-by-step guide for transferring large files from your phone to computer.">
+    <meta property="og:image" content="https://largefiletransfer.org/blog/images/send-large-files-phone-to-computer.jpg">
+    <meta property="article:published_time" content="2026-01-21T00:00:00Z">
+    <meta property="article:author" content="LargeFileTransfer.org">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://largefiletransfer.org/blog/send-large-files-phone-to-computer">
+    <meta property="twitter:title" content="How to Send Large Files from Phone to Computer">
+    <meta property="twitter:description" content="Step-by-step guide for transferring large files from your phone to computer.">
+    <meta property="twitter:image" content="https://largefiletransfer.org/blog/images/send-large-files-phone-to-computer.jpg">
+
+    <link rel="stylesheet" href="/style.css">
+
+    <!-- Blog Post Specific Styles -->
+    <style>
+        .blog-post-wrapper {
+            padding: 2rem;
+            min-height: calc(100vh - 200px);
+        }
+
+        .blog-post-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 3rem 2.5rem;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+        }
+
+        .blog-post-header {
+            margin-bottom: 40px;
+        }
+
+        .blog-post-category {
+            color: #667eea;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.9em;
+            letter-spacing: 0.5px;
+            margin-bottom: 15px;
+            display: inline-block;
+        }
+
+        .blog-post-title {
+            font-size: 2.5em;
+            line-height: 1.2;
+            margin-bottom: 20px;
+            color: #2d3748;
+            font-weight: 700;
+        }
+
+        .blog-post-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            font-size: 0.95em;
+            color: #4a5568;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .blog-post-meta span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .blog-post-content {
+            font-size: 1.05em;
+            line-height: 1.8;
+            color: #2d3748;
+        }
+
+        .blog-post-content h2 {
+            font-size: 1.8em;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            color: #2d3748;
+            font-weight: 700;
+        }
+
+        .blog-post-content h3 {
+            font-size: 1.4em;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            color: #2d3748;
+            font-weight: 600;
+        }
+
+        .blog-post-content p {
+            margin-bottom: 20px;
+        }
+
+        .blog-post-content ul,
+        .blog-post-content ol {
+            margin-bottom: 20px;
+            padding-left: 30px;
+        }
+
+        .blog-post-content li {
+            margin-bottom: 10px;
+        }
+
+        .blog-post-content blockquote {
+            border-left: 4px solid #667eea;
+            padding-left: 20px;
+            margin: 30px 0;
+            font-style: italic;
+            color: #555;
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 4px;
+        }
+
+        .blog-post-content strong {
+            color: #333;
+            font-weight: 600;
+        }
+
+        /* Featured Image Styles */
+        .blog-post-featured-image {
+            width: 100%;
+            height: auto;
+            max-width: 100%;
+            border-radius: 12px;
+            margin: 30px 0;
+            display: block;
+            object-fit: cover;
+        }
+
+        /* Table Wrapper for Mobile Scrolling */
+        .table-wrapper {
+            width: 100%;
+            overflow-x: auto;
+            margin: 30px 0;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 0;
+            font-size: 0.95em;
+            min-width: 650px;
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .comparison-table th {
+            background: #667eea;
+            color: white;
+            font-weight: 600;
+        }
+
+        .comparison-table tr:hover {
+            background: #f9f9f9;
+        }
+
+        .step-box {
+            background: #f0f7ff;
+            border-left: 4px solid #667eea;
+            padding: 25px;
+            margin: 25px 0;
+            border-radius: 8px;
+        }
+
+        .step-box h3 {
+            margin-top: 0;
+            color: #667eea;
+        }
+
+        .tip-box {
+            background: #e8f5e9;
+            border-left: 4px solid #4caf50;
+            padding: 20px;
+            margin: 25px 0;
+            border-radius: 4px;
+        }
+
+        .tip-box h4 {
+            margin-top: 0;
+            margin-bottom: 10px;
+            color: #2e7d32;
+        }
+
+        .method-card {
+            background: #f9f9f9;
+            padding: 25px;
+            border-radius: 8px;
+            margin: 25px 0;
+            border-left: 4px solid #667eea;
+        }
+
+        .blog-post-cta {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            border-radius: 12px;
+            text-align: center;
+            margin: 50px 0;
+        }
+
+        .blog-post-cta h3 {
+            font-size: 1.8em;
+            margin-bottom: 15px;
+            color: white;
+        }
+
+        .blog-post-cta p {
+            font-size: 1.1em;
+            margin-bottom: 25px;
+            opacity: 0.95;
+        }
+
+        .blog-post-cta .btn {
+            background: white;
+            color: #667eea;
+            padding: 15px 35px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-block;
+            transition: transform 0.3s ease;
+        }
+
+        .blog-post-cta .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .blog-post-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 40px 0;
+            padding-top: 30px;
+            border-top: 2px solid #f0f0f0;
+        }
+
+        .blog-post-tag {
+            background: #f0f0f0;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            color: #666;
+            text-decoration: none;
+            transition: background 0.3s ease;
+        }
+
+        .blog-post-tag:hover {
+            background: #e0e0e0;
+        }
+
+        .back-to-blog {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+            margin-bottom: 30px;
+            transition: gap 0.3s ease;
+        }
+
+        .back-to-blog:hover {
+            gap: 12px;
+        }
+
+        /* Tablet & Mobile Optimization (768px and below) */
+        @media (max-width: 768px) {
+            .blog-post-wrapper {
+                padding: 1rem;
+            }
+
+            .blog-post-container {
+                padding: 2rem 1.5rem;
+                border-radius: 16px;
+            }
+
+            .blog-post-title {
+                font-size: 2em;
+            }
+
+            .blog-post-content {
+                font-size: 1em;
+            }
+
+            .comparison-table {
+                font-size: 0.85em;
+                min-width: 550px;
+            }
+
+            .blog-post-featured-image {
+                margin: 20px 0;
+                border-radius: 8px;
+            }
+
+            .table-wrapper {
+                margin: 20px -1.5rem;
+                padding: 0 1.5rem;
+            }
+
+            .step-box, .tip-box, .method-card {
+                padding: 20px;
+                margin: 20px 0;
+            }
+        }
+
+        /* Mobile Optimization (480px and below) */
+        @media (max-width: 480px) {
+            .blog-post-wrapper {
+                padding: 0.5rem;
+            }
+
+            .blog-post-container {
+                padding: 1.5rem 1rem;
+                border-radius: 12px;
+            }
+
+            .blog-post-title {
+                font-size: 1.75em;
+            }
+
+            .blog-post-content h2 {
+                font-size: 1.5em;
+            }
+
+            .blog-post-content h3 {
+                font-size: 1.2em;
+            }
+
+            .comparison-table {
+                font-size: 0.75em;
+                min-width: 500px;
+            }
+
+            .blog-post-featured-image {
+                margin: 15px 0;
+                border-radius: 6px;
+            }
+
+            .table-wrapper {
+                margin: 15px -1rem;
+                padding: 0 1rem;
+            }
+
+            .blog-post-cta {
+                padding: 25px 20px;
+            }
+
+            .blog-post-cta h3 {
+                font-size: 1.4em;
+            }
+
+            .blog-post-cta p {
+                font-size: 1em;
+            }
+
+            .step-box, .tip-box, .method-card {
+                padding: 15px;
+                margin: 15px 0;
+            }
+        }
+    </style>
+
+    <!-- Structured Data for Blog Post -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        "headline": "How to Send Large Files from Phone to Computer",
+        "description": "Learn how to easily send large files from your phone to computer. Step-by-step guide for transferring videos, photos, and documents using P2P, cloud storage, and more.",
+        "image": "https://largefiletransfer.org/blog/images/send-large-files-phone-to-computer.jpg",
+        "datePublished": "2026-01-21T00:00:00Z",
+        "dateModified": "2026-01-21T00:00:00Z",
+        "author": {
+            "@type": "Organization",
+            "name": "LargeFileTransfer.org"
+        },
+        "publisher": {
+            "@type": "Organization",
+            "name": "LargeFileTransfer.org",
+            "logo": {
+                "@type": "ImageObject",
+                "url": "https://largefiletransfer.org/large-file-transfer.png"
+            }
+        },
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https://largefiletransfer.org/blog/send-large-files-phone-to-computer"
+        }
+    }
+    </script>
+</head>
+<body>
+    <div id="navbar-container"></div>
+
+    <div class="blog-post-wrapper">
+        <article class="blog-post-container">
+            <a href="/blog" class="back-to-blog">
+                <span>←</span> Back to Blog
+            </a>
+
+        <header class="blog-post-header">
+            <span class="blog-post-category">Guides</span>
+            <h1 class="blog-post-title">How to Send Large Files from Phone to Computer</h1>
+            <div class="blog-post-meta">
+                <span id="post-date">📅 <span class="date-display">Loading...</span></span>
+                <span>⏱️ 7 min read</span>
+                <span>✍️ LargeFileTransfer Team</span>
+            </div>
+        </header>
+
+        <!-- Featured Image -->
+        <img
+            src="/blog/images/send-large-files-phone-to-computer.jpg"
+            alt="How to send large files from phone to computer - Complete guide for mobile file transfer"
+            class="blog-post-featured-image"
+            loading="lazy"
+            onerror="this.style.display='none';">
+
+        <div class="blog-post-content">
+            <p>Need to transfer large video files from your phone to your computer? Whether it's 4K videos you recorded, a collection of high-resolution photos, or important documents, transferring large files from your mobile device to your PC can be frustrating when you're limited by cable speeds, app restrictions, or cloud storage quotas.</p>
+
+            <p>This guide covers the fastest and easiest methods to send large files from your phone to computer, including a step-by-step walkthrough of using browser-based P2P transfer that works on any device without installing apps.</p>
+
+            <h2>Quick Comparison: Mobile to Computer Transfer Methods</h2>
+
+            <div class="table-wrapper">
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Method</th>
+                            <th>Speed</th>
+                            <th>File Size Limit</th>
+                            <th>Requires Installation</th>
+                            <th>Best For</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>P2P Browser Transfer</strong></td>
+                            <td>⚡⚡⚡ Very Fast</td>
+                            <td>Up to 10GB</td>
+                            <td>No - works in browser</td>
+                            <td>Large files, quick transfers</td>
+                        </tr>
+                        <tr>
+                            <td><strong>USB Cable</strong></td>
+                            <td>⚡⚡⚡ Very Fast</td>
+                            <td>Unlimited</td>
+                            <td>No - native support</td>
+                            <td>Massive file collections</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Cloud Storage</strong></td>
+                            <td>⚡⚡ Moderate</td>
+                            <td>2-15GB (free tier)</td>
+                            <td>Yes - app required</td>
+                            <td>Files you need later</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Email</strong></td>
+                            <td>⚡ Slow</td>
+                            <td>25MB maximum</td>
+                            <td>No</td>
+                            <td>Small documents only</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Bluetooth</strong></td>
+                            <td>⚡ Very Slow</td>
+                            <td>No hard limit</td>
+                            <td>No - native support</td>
+                            <td>Small files, no internet</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h2>Method 1: Browser-Based P2P Transfer (Recommended for Large Files)</h2>
+
+            <p>The fastest way to send large files from your phone to computer is using browser-based peer-to-peer transfer. No app installation required, works on any phone (iPhone or Android), and transfers files directly without uploading to servers.</p>
+
+            <h3>Why P2P Transfer is Best for Mobile</h3>
+            <ul>
+                <li><strong>No app to install:</strong> Works directly in your phone's browser (Safari, Chrome, etc.)</li>
+                <li><strong>No file size limits:</strong> Transfer files up to 10GB for free</li>
+                <li><strong>Faster than cloud:</strong> Direct transfer means no upload wait time</li>
+                <li><strong>Privacy-focused:</strong> Files never stored on third-party servers</li>
+                <li><strong>Works on WiFi or cellular:</strong> Transfer anywhere with internet connection</li>
+            </ul>
+
+            <div class="step-box">
+                <h3>📱 Step-by-Step: Transfer Files from Phone to Computer</h3>
+
+                <p><strong>On Your Computer:</strong></p>
+                <ol>
+                    <li>Open your web browser and go to <strong>LargeFileTransfer.org</strong></li>
+                    <li>Click the <strong>"Select File"</strong> button or drag and drop files</li>
+                    <li>After selecting your file, you'll see a <strong>QR code</strong> appear on screen</li>
+                    <li>Keep this browser window open - your computer is now ready to receive</li>
+                </ol>
+
+                <p><strong>On Your Phone:</strong></p>
+                <ol>
+                    <li>Open your phone's camera app</li>
+                    <li>Point your camera at the QR code on your computer screen</li>
+                    <li>Tap the notification that appears to open the link in your browser</li>
+                    <li>On the webpage that opens, tap <strong>"Select File"</strong></li>
+                    <li>Choose the video, photo, or document you want to send from your phone's gallery or files</li>
+                    <li>Tap <strong>"Send File"</strong> to start the transfer</li>
+                </ol>
+
+                <p><strong>Transfer Happens:</strong></p>
+                <ul>
+                    <li>Watch the progress bar as your file transfers directly from phone to computer</li>
+                    <li>When complete, the file automatically downloads to your computer</li>
+                    <li>Done! Your large file is now on your computer</li>
+                </ul>
+            </div>
+
+            <div class="tip-box">
+                <h4>💡 Pro Tip: Keep Both Devices Connected</h4>
+                <p>P2P transfer requires both your phone and computer to remain connected to the internet during the transfer. Don't close the browser window or lock your phone until the transfer completes. For best speeds, connect both devices to the same WiFi network.</p>
+            </div>
+
+            <h2>Method 2: USB Cable Transfer</h2>
+
+            <p>Traditional but reliable, USB cable transfer works when you don't have internet or need to move hundreds of gigabytes.</p>
+
+            <h3>For iPhone to Computer</h3>
+            <ol>
+                <li>Connect your iPhone to computer using Lightning to USB cable</li>
+                <li><strong>Windows:</strong> Open File Explorer → This PC → Your iPhone → DCIM folders</li>
+                <li><strong>Mac:</strong> Photos app opens automatically, or use Image Capture for manual selection</li>
+                <li>Drag and drop files to copy them to your computer</li>
+            </ol>
+
+            <h3>For Android to Computer</h3>
+            <ol>
+                <li>Connect Android phone using USB cable</li>
+                <li>On your phone, select "File Transfer" mode from the USB notification</li>
+                <li>On computer, open File Explorer (Windows) or Android File Transfer (Mac)</li>
+                <li>Navigate to DCIM, Downloads, or other folders to find your files</li>
+                <li>Copy files to your computer</li>
+            </ol>
+
+            <div class="tip-box">
+                <h4>💡 When to Use USB Cable</h4>
+                <p>USB is best when you're transferring entire photo libraries (100+ files), have no internet connection, or need to transfer more than 100GB. For individual large files or quick transfers, P2P browser method is faster and easier.</p>
+            </div>
+
+            <h2>Method 3: Cloud Storage (Google Drive, iCloud, Dropbox)</h2>
+
+            <p>Cloud storage works well when you need to access files on multiple devices or don't need them immediately.</p>
+
+            <h3>Using Google Drive</h3>
+            <ol>
+                <li>On your phone, open the Google Drive app (or install it)</li>
+                <li>Tap the <strong>+</strong> button → Upload</li>
+                <li>Select your video or file (may take 5-30 minutes to upload depending on size)</li>
+                <li>On your computer, go to drive.google.com</li>
+                <li>Find your file and click Download</li>
+            </ol>
+
+            <p><strong>Limitations:</strong> Free tier gives 15GB total storage (shared with Gmail and Google Photos). Upload time can be slow on mobile data. Files stored on Google's servers.</p>
+
+            <h3>Using iCloud (iPhone Users)</h3>
+            <ol>
+                <li>Ensure iCloud Photos is enabled: Settings → Photos → iCloud Photos</li>
+                <li>Your photos/videos automatically sync to iCloud</li>
+                <li>On computer, visit iCloud.com or use Photos app (Mac)</li>
+                <li>Download files to your computer</li>
+            </ol>
+
+            <p><strong>Limitations:</strong> Only 5GB free storage. Full-resolution photos only sync if you have enough iCloud storage. Sync can take hours for large videos.</p>
+
+            <h2>Method 4: Bluetooth Transfer (No Internet Needed)</h2>
+
+            <p>Bluetooth works without internet but is extremely slow for large files.</p>
+
+            <ol>
+                <li>Enable Bluetooth on both phone and computer</li>
+                <li>Pair your devices</li>
+                <li>On phone, select file and choose "Share via Bluetooth"</li>
+                <li>Accept the transfer on your computer</li>
+            </ol>
+
+            <p><strong>Speed:</strong> Typically 1-2 MB/s. A 1GB video would take 8-15 minutes. Only practical for files under 50MB.</p>
+
+            <h2>Which Method Should You Choose?</h2>
+
+            <p>Choose your transfer method based on your specific needs:</p>
+
+            <ul>
+                <li><strong>Single large file (video, project file):</strong> Use P2P browser transfer - fastest and easiest</li>
+                <li><strong>Multiple large files right now:</strong> USB cable or P2P transfer</li>
+                <li><strong>Need files on multiple devices later:</strong> Cloud storage</li>
+                <li><strong>Entire photo library:</strong> USB cable or cloud sync</li>
+                <li><strong>Small documents under 25MB:</strong> Email or messaging apps</li>
+                <li><strong>No internet available:</strong> USB cable or Bluetooth</li>
+            </ul>
+
+            <h2>Troubleshooting Common Transfer Issues</h2>
+
+            <h3>Transfer is Very Slow</h3>
+            <ul>
+                <li>Connect both devices to WiFi instead of using cellular data</li>
+                <li>Move closer to your WiFi router</li>
+                <li>Close other apps and browser tabs consuming bandwidth</li>
+                <li>For P2P: Both devices must remain connected until transfer completes</li>
+            </ul>
+
+            <h3>Can't See Phone When Connected via USB</h3>
+            <ul>
+                <li><strong>iPhone:</strong> Tap "Trust This Computer" when prompted on phone</li>
+                <li><strong>Android:</strong> Change USB mode from "Charging Only" to "File Transfer" in notification</li>
+                <li>Try a different USB cable - charging-only cables don't transfer data</li>
+            </ul>
+
+            <h3>File Won't Upload to Cloud</h3>
+            <ul>
+                <li>Check if file size exceeds your available cloud storage</li>
+                <li>Ensure stable internet connection (WiFi recommended for large files)</li>
+                <li>Some cloud services have individual file size limits (varies by provider)</li>
+            </ul>
+
+            <h2>Tips for Faster Mobile File Transfers</h2>
+
+            <ol>
+                <li><strong>Compress videos before sending:</strong> Most phones have built-in video compression in share menu</li>
+                <li><strong>Use WiFi, not cellular:</strong> WiFi is typically 5-10x faster for uploads</li>
+                <li><strong>Keep screen on during transfer:</strong> Some phones pause transfers when screen locks</li>
+                <li><strong>Transfer in batches:</strong> Instead of 50 files at once, send 10 at a time for reliability</li>
+                <li><strong>Close background apps:</strong> Free up bandwidth by closing streaming apps and downloads</li>
+            </ol>
+
+            <h2>Conclusion: Simplest Way to Move Large Files from Phone to PC</h2>
+
+            <p>For most people sending large files from phone to computer, browser-based P2P transfer offers the best balance of speed, ease, and privacy. No apps to install, works on any phone, and handles files up to 10GB with direct transfer speeds.</p>
+
+            <p>USB cables remain the best choice for transferring massive collections or when you lack internet, while cloud storage works well for files you'll need across multiple devices. Choose the method that fits your specific situation, and use the step-by-step guides above to make your transfer as smooth as possible.</p>
+        </div>
+
+        <!-- Call to Action -->
+        <div class="blog-post-cta">
+            <h3>Transfer Files from Phone to Computer Now</h3>
+            <p>Send files up to 10GB from your phone to computer in minutes. No app installation required - works directly in your browser.</p>
+            <a href="/" class="btn">Start Transfer</a>
+        </div>
+
+        <!-- Tags -->
+        <div class="blog-post-tags">
+            <span style="color: #666; margin-right: 10px;">Tags:</span>
+            <a href="/blog" class="blog-post-tag">mobile file transfer</a>
+            <a href="/blog" class="blog-post-tag">phone to computer</a>
+            <a href="/blog" class="blog-post-tag">transfer photos</a>
+            <a href="/blog" class="blog-post-tag">mobile to PC</a>
+            <a href="/blog" class="blog-post-tag">file transfer</a>
+        </div>
+        </article>
+    </div>
+
+    <footer class="footer-main">
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="/privacy">Privacy Policy</a>
+                <a href="/terms">Terms of Service</a>
+            </div>
+            <div class="footer-social">
+                <a href="https://twitter.com/intent/tweet?text=How%20to%20Send%20Large%20Files%20from%20Phone%20to%20Computer&url=https://largefiletransfer.org/blog/send-large-files-phone-to-computer" target="_blank" rel="noopener" aria-label="Share on Twitter">𝕏</a>
+                <a href="https://www.facebook.com/sharer/sharer.php?u=https://largefiletransfer.org/blog/send-large-files-phone-to-computer" target="_blank" rel="noopener" aria-label="Share on Facebook">f</a>
+                <a href="https://www.linkedin.com/sharing/share-offsite/?url=https://largefiletransfer.org/blog/send-large-files-phone-to-computer" target="_blank" rel="noopener" aria-label="Share on LinkedIn">in</a>
+                <a href="https://reddit.com/submit?url=https://largefiletransfer.org/blog/send-large-files-phone-to-computer&title=How%20to%20Send%20Large%20Files%20from%20Phone%20to%20Computer" target="_blank" rel="noopener" aria-label="Share on Reddit">●</a>
+                <a href="mailto:?subject=How to Send Large Files from Phone to Computer&body=Check out this guide: https://largefiletransfer.org/blog/send-large-files-phone-to-computer" aria-label="Share via Email">✉</a>
+            </div>
+            <p class="footer-copyright">&copy; 2025 LargeFileTransfer.org. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="/navbar.js"></script>
+    <script src="/blog.js"></script>
+    <script>
+        // Get current post slug from URL path
+        const currentSlug = window.location.pathname.split('/').pop() || window.location.pathname.split('/')[window.location.pathname.split('/').length - 2];
+
+        // Find the post data from blog.js
+        const currentPost = blogPosts.find(post => post.slug === currentSlug);
+
+        if (currentPost) {
+            // Format date for display
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            const formattedDate = new Date(currentPost.date).toLocaleDateString('en-US', options);
+
+            // Update visible date in the page
+            const dateDisplay = document.querySelector('.date-display');
+            if (dateDisplay) {
+                dateDisplay.textContent = formattedDate;
+            }
+
+            // Update meta tags
+            const publishedTimeMeta = document.querySelector('meta[property="article:published_time"]');
+            if (publishedTimeMeta) {
+                publishedTimeMeta.setAttribute('content', currentPost.date + 'T00:00:00Z');
+            }
+
+            // Update structured data (JSON-LD)
+            const structuredDataScript = document.querySelector('script[type="application/ld+json"]');
+            if (structuredDataScript) {
+                try {
+                    const structuredData = JSON.parse(structuredDataScript.textContent);
+                    structuredData.datePublished = currentPost.date + 'T00:00:00Z';
+                    structuredData.dateModified = currentPost.date + 'T00:00:00Z';
+                    structuredDataScript.textContent = JSON.stringify(structuredData, null, 4);
+                } catch (e) {
+                    console.error('Error updating structured data:', e);
+                }
+            }
+        }
+    </script>
+</body>
+</html>

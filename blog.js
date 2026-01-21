@@ -36,6 +36,15 @@ const blogPosts = [
         date: '2026-01-20',
         readTime: '9 min read',
         tags: ['transfer video files', 'large video file sharing', 'video compression', '4K video', 'video file transfer']
+    },
+    {
+        slug: 'send-large-files-phone-to-computer',
+        title: 'How to Send Large Files from Phone to Computer',
+        excerpt: 'Learn how to easily send large files from your phone to computer. Step-by-step guide for transferring videos, photos, and documents using P2P, cloud storage, and more.',
+        category: 'Guides',
+        date: '2026-01-21',
+        readTime: '7 min read',
+        tags: ['mobile file transfer', 'phone to computer', 'transfer photos', 'mobile to PC', 'file transfer']
     }
     // Add more blog posts below
 ];
