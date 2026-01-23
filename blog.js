@@ -45,6 +45,15 @@ const blogPosts = [
         date: '2026-01-21',
         readTime: '7 min read',
         tags: ['mobile file transfer', 'phone to computer', 'transfer photos', 'mobile to PC', 'file transfer']
+    },
+    {
+        slug: 'webrtc-technology-future-secure-file-sharing',
+        title: 'WebRTC Technology: The Future of Secure File Sharing',
+        excerpt: 'Discover how WebRTC technology enables secure peer-to-peer file sharing. Learn how DirectDrop uses WebRTC for fast, encrypted file transfers without cloud storage.',
+        category: 'Technology',
+        date: '2026-01-22',
+        readTime: '9 min read',
+        tags: ['WebRTC', 'P2P file transfer', 'peer to peer technology', 'secure file sharing', 'technology', 'encryption']
     }
     // Add more blog posts below
 ];
