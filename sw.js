@@ -1,4 +1,4 @@
-const CACHE_NAME = 'directdrop-v2'; // Updated version to force cache refresh
+const CACHE_NAME = 'directdrop-v3-' + Date.now(); // Force complete cache refresh
 const urlsToCache = [
   '/style.css',
   '/manifest.json'
@@ -23,12 +23,15 @@ self.addEventListener('install', (event) => {
 self.addEventListener('fetch', (event) => {
   const url = new URL(event.request.url);
 
-  // Network-first strategy for HTML and JavaScript files
-  if (url.pathname.match(/\.(html|js)$/) || url.pathname === '/' || url.pathname.startsWith('/receive/')) {
+  // Network-first strategy for HTML, JavaScript files, and blog content
+  if (url.pathname.match(/\.(html|js)$/) ||
+      url.pathname === '/' ||
+      url.pathname.startsWith('/receive/') ||
+      url.pathname.startsWith('/blog')) {
     event.respondWith(
-      fetch(event.request)
+      fetch(event.request, { cache: 'no-store' })
         .then((response) => {
-          // Don't cache HTML/JS files
+          // Don't cache HTML/JS/blog files - always fetch fresh
           return response;
         })
         .catch(() => {
