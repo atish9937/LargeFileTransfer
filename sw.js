@@ -23,15 +23,18 @@ self.addEventListener('install', (event) => {
 self.addEventListener('fetch', (event) => {
   const url = new URL(event.request.url);
 
-  // Network-first strategy for HTML, JavaScript files, and blog content
-  if (url.pathname.match(/\.(html|js)$/) ||
+  // Check if this is an image file
+  const isImage = url.pathname.match(/\.(jpg|jpeg|png|gif|svg|webp|ico)$/i);
+
+  // Network-first strategy for HTML and JavaScript files, but NOT images
+  if ((url.pathname.match(/\.(html|js)$/) ||
       url.pathname === '/' ||
       url.pathname.startsWith('/receive/') ||
-      url.pathname.startsWith('/blog')) {
+      url.pathname.startsWith('/blog')) && !isImage) {
     event.respondWith(
       fetch(event.request, { cache: 'no-store' })
         .then((response) => {
-          // Don't cache HTML/JS/blog files - always fetch fresh
+          // Don't cache HTML/JS files - always fetch fresh
           return response;
         })
         .catch(() => {
@@ -44,7 +47,20 @@ self.addEventListener('fetch', (event) => {
     event.respondWith(
       caches.match(event.request)
         .then((response) => {
-          return response || fetch(event.request);
+          if (response) {
+            return response;
+          }
+          // If not in cache, fetch and cache it
+          return fetch(event.request).then((response) => {
+            // Cache images and CSS for better performance
+            if (isImage || url.pathname.match(/\.css$/)) {
+              const responseToCache = response.clone();
+              caches.open(CACHE_NAME).then((cache) => {
+                cache.put(event.request, responseToCache);
+              });
+            }
+            return response;
+          });
         })
     );
   }
